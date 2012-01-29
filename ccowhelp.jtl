@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3c.org/1999/xhtml" lang="EN">
+<head>{% block head %}
+	<title>{% block title %}{{ config['site'] }}: {{ var['title'] }}{% endblock %}</title>
+	<link rel="stylesheet" type="text/css" href="main.css" />
+{% endblock %}</head>
+<body>
+		{% if var['crumbs'] %}
+		<ul class="loaf" id="breadtrail">
+			{% for i,url,name in var['crumbs'] %}
+			<li class="crumb" id="sm0{{ i }}"><a href="{{ url }}">{{ name|e }}</a></li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+
+		{% if var['code'] %}
+			{% if var['expl'] %}
+		<h1 id="sm17">{{ var['catname'] }}</h1>
+		<div class="content" id="sm18">
+			<div class="menu" id="sm16">
+			{% else %}
+		<h1 id="sm11">#{{ var['cattrim'] }}: {{ var['catname']|e }}</h1>
+		<div class="content" id="sm12">
+				{% if var['cattrim'] %}
+			<p class="note" id="sm01">If you are searching for this topic, add <strong>cowc:#{{ var['cattrim'] }}</strong> to your search criteria.</p>
+				{% endif %}
+				{% if var['catmul'] %}
+			<p class="sugg" id="sm03">If the site/work covers multiple categories, its category might be  <a href="{{ var['uri'] }}?lang={{ var['lang'] }}&cowc={{ var['catmul'] }}"> #{{ var['catmul'] }}: {{ var['muldesc']|e }}</a>, and the code to designate it as such would be <strong>&lt;meta name="cowc" content="#{{ var['catmul'] }}" /&gt;</strong>.</p>
+				{% else %}
+			<p class="note" id="sm13">The snippet for this category is: <strong>&lt;meta name="cowc" content="#{{ var['code'] }}" /&gt;</strong></p>
+				{% endif %}
+			<p class="note" id="sm02">You can add this snippet to your HTML's head section to enable search engines that use CCOW to categorize your site.</p>
+			<div class="menu" id="sm14" style="border-color: #{{ var['border'] }};">
+			{% endif %}
+			{% include var['catinf'] ignore missing %}
+			{{ var['noinf'] }}
+			{% if var['subcats'] %}
+				<p class="drill" id="sm15">If this is not correct, choose a more specific category from the list below:</p> 
+				<p class="clearit"> </p>
+				{% for subcat, n, desc in var['subcats'] %}
+				<p class="subcat"><a href="{{ var['uri'] }}?lang={{ var['lang'] }}&cowc={{ subcat }}">{{ n }}: {{ desc|e }}</a></p>
+				{% endfor %}
+			{% endif %}
+			<p class="clearit"> </p>
+			</div>
+		</div>
+    {% else %}
+		<h1 id="sm10">{{ var['title'] }}</h1>
+		<div class="languages">
+			<p class="lingua"><a href="{{ var['uri'] }}?lang=en">Language: English</a></p>
+			<p class="lingua"><a href="{{ var['uri'] }}?lang=es">Idioma: Español</a></p>
+		</div>
+		{% endif %}
+	{% block footer %}<a href="progress.htm">View Progress Report</a>
+
+	<p class="clearit">Don't know what these categories mean? Check out <a href="ccowhelp.py?lang=en&cowc=yxxx">Category Explanation</a>
+	<p class="clearit"> </p>
+
+	<div class="cc" id="sm11">This helper application is released under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike</a> license.
+	<p>The contents of the translation and description files are released under a <a href="http://creativecommons.org/licenses/by-nd/3.0/">CC Attribution-No Derivative Works</a> license.</p> (C) copyright 2009-2012.</div>
+	<p class="source" id="sm12">You can obtain the source for this program at http://nowhere.yet</p>{% endblock %}
+</body>
+</html>

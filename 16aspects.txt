@@ -1,0 +1,32 @@
+The Reluctant Hermit (skreyola) wrote,
+2010-11-17 12:16:00
+ The Sixteen Aspects 
+ The 16 aspects of human knowledge
+
+I may or may not have mentioned this here before, but I've been making a study (from time to time) of the ways in which we categorize things as human beings. I have come to the conclusion that all of human knowledge can be categorized in a finite number of distinct categories. These categories can be found by combining 16 aspects. Every topic contains these 16 aspects, and every topic fits into one of these aspects of the base topic "Everything".
+
+I hope to engage in discussion with all of you out there of how any specific topic (or even products) fits into these categories defined by combining aspects. To make the discussion easier, I have determined to define the various aspects and to give each a name (and suggested pronunciation) for use in the discussion, so that ideas can be conveyed as simply as possible.
+
+The first aspect of human knowledge is the Hol Aspect. Hol (hall) represents the whole, or multiplicity. It includes meta-topics, as well as collections.
+The second aspect of human knowledge is the Ras Aspect. Ras (raas) represents the core, or generality that is not a multiple-unit set. Where Hol is the topic itself or a collection of related topics, Ras is the unified kernel of the topic. It includes core principles, reference, and general knowledge.
+The third aspect of human knowledge is the Dua Aspect. Dua (dwaa) represents the mind, or mentality. It includes philosophy and psychology.
+The fourth aspect of human knowledge is the Chi Aspect. Chi (chee) represents the shared, or communicability. It includes transmission, transportation, education, and childhood.
+The fifth aspect of human knowledge is the Ter Aspect. Ter (tare) represents the group, or sociality. It includes social impact, social aspects, and social sciences.
+The sixth aspect of human knowledge is the Fum Aspect. Fum (foom) represents the recent past, or provability. It includes objectivity, realism (as opposed to the surreal or fanciful), empiricism, and the hard sciences.
+The seventh aspect of human knowledge is the Sek Aspect. Sek (seck) represents the present, the now, or vitality. It includes growth, health, and leisure, as well as animal life, medicine, and recreation.
+The eighth aspect of human knowledge is the Zab Aspect (or Zabat Aspect). Zab (zaab) represents the basket, or sustainability. It includes provisional aspects of the topic, as well as maturity, continuation, plant life, horticulture, and procreation.
+The ninth aspect of human knowledge is the Med Aspect. Med (medd) represents the place, or spatiality. It includes locational or community aspects of the topic, or extraplanetary aspects.
+The tenth aspect of human knowledge is the Neu Aspect. Neu (new) represents the machine, or technology. It includes technical aspects, or anything that multiplies the usefulness of a resource or topic.
+The eleventh aspect of human knowledge is the Uay Aspect. Uay (ooway) represents the distant past, or memorability. It includes traditions, history, memory, and old age.
+The twelfth aspect of human knowledge is the Arz Aspect. Arz (ahrz) represents the seen, or artistry. It includes the arts, vision or visionary aspects, things we can see but not touch, and matters of style.
+The thirteenth aspect of human knowledge is the Pax Aspect. Pax (packs) represents the unseen, or rituality. It includes faith and religion, as well as processes, algorithms, procedures and standards.
+The fourteenth aspect of human knowledge is the Ord Aspect. Ord (ohrd) represents the ruler, or legality. It includes policies, governing structures of the topic, political science, and laws or rules.
+The fifteenth aspect of human knowledge is the Iyu Aspect. Iyu (eeyoo) represents the individual, or specificity. It includes the personal, the biographical, the subjective, and the exemplary.
+The sixteenth aspect of human knowledge is the Ech Aspect. Ech (etch) represents the unknown or unaccepted, or marginality. It includes controversy, conjecture, the taboo, the mysterious, the future, predictions, and abnormalities or outliers.
+
+Combinations of these sixteen aspects can be represented by a sequence of hexadecimal digits, with Hol being represented by #0, Ter being represented by #4, Med by #8, Pax by #c, and so on to Ech as #f. For example, the history of photography, being a combination of Ars, Fum, Hol, Uay, could be abbreviated as #b50a.
+Aspect combinations are order specific. #e6 is not the same as #6e. The first would be something like biographies of medical figures, while the second would be something like personal health and fitness.
+Some aspects lend themselves to specific subaspects rather than a further division with the main aspects. Uay, if it is not the fourth aspect in a chain, is more appropriately divided into eras than into aspects. Med is often more appropriately divided into regions than into aspects. And topics of a specific language have their own unique subaspects within Chi. But almost all other areas will fit neatly into these 16 main aspects as subaspects.
+
+
+Tags: ccow, essays, geekiness, insight, needful reading, observations/proverbs, search for truth, take action!, this is about you
