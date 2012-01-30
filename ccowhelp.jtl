@@ -8,8 +8,8 @@
 <body>
 		{% if var['crumbs'] %}
 		<ul class="loaf" id="breadtrail">
-			{% for i,url,name in var['crumbs'] %}
-			<li class="crumb" id="sm0{{ i }}"><a href="{{ url }}">{{ name|e }}</a></li>
+			{% for crumb in var['crumbs'] %}
+			<li class="crumb" id="sm0{{ crumb[0] }}"><a href="{{ crumb[1] }}">{{ crumb[2]|e }}</a>{% if var['crumbdiv'] %} &gt;{% endif %}</li>
 			{% endfor %}
 		</ul>
 		{% endif %}
@@ -38,8 +38,8 @@
 			{% if var['subcats'] %}
 				<p class="drill" id="sm15">If this is not correct, choose a more specific category from the list below:</p> 
 				<p class="clearit"> </p>
-				{% for subcat, n, desc in var['subcats'] %}
-				<p class="subcat"><a href="{{ var['uri'] }}?lang={{ var['lang'] }}&cowc={{ subcat }}">{{ n }}: {{ desc|e }}</a></p>
+				{% for subcat in var['subcats'] %}
+				<p class="subcat"><a href="{{ var['uri'] }}?lang={{ var['lang'] }}&cowc={{ subcat[0] }}">{{ subcat[1] }}: {{ subcat[2]|e }}</a></p>
 				{% endfor %}
 			{% endif %}
 			<p class="clearit"> </p>
@@ -52,13 +52,13 @@
 			<p class="lingua"><a href="{{ var['uri'] }}?lang=es">Idioma: Español</a></p>
 		</div>
 		{% endif %}
-	{% block footer %}<a href="progress.htm">View Progress Report</a>
+	{% block footer %}<a href="progress.htm">{{ var['progress'] }}</a>
 
 	<p class="clearit">Don't know what these categories mean? Check out <a href="ccowhelp.py?lang=en&cowc=yxxx">Category Explanation</a>
 	<p class="clearit"> </p>
 
 	<div class="cc" id="sm11">This helper application is released under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike</a> license.
 	<p>The contents of the translation and description files are released under a <a href="http://creativecommons.org/licenses/by-nd/3.0/">CC Attribution-No Derivative Works</a> license.</p> (C) copyright 2009-2012.</div>
-	<p class="source" id="sm12">You can obtain the source for this program at http://nowhere.yet</p>{% endblock %}
-</body>
+	<p class="source" id="sm12">You can obtain the source for this program at http://nowhere.yet</p>
+{% endblock %}</body>
 </html>

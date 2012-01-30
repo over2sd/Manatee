@@ -2,6 +2,7 @@ CREATE DATABASE ccow;
 USE ccow;
 CREATE TABLE categories_en ( ccode CHAR(4) NOT NULL PRIMARY KEY, ctext VARCHAR(65) );
 CREATE TABLE cats ( cid INT(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, ccode CHAR(4) default NULL, ctext VARCHAR(65) );
+INSERT INTO categories_en (ccode,ctext) VALUES('oooo','Anything/Everything (root level)');
 INSERT INTO categories_en (ccode,ctext) VALUES('0ooo','Multiplicity, Collections, Search Engines, etc.');
 INSERT INTO categories_en (ccode,ctext) VALUES('1ooo','General Knowledge and Systems');
 INSERT INTO categories_en (ccode,ctext) VALUES('2ooo','Psychology and Philosophy');
