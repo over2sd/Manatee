@@ -1,0 +1,44 @@
+Content-Type: text/css
+
+
+/* CSS */
+
+p { margin: 0px; }
+h1 { clear: left; }
+.loaf { position: absolute; left: 2px; top: 2px; color: #300; list-style-type: circle; }
+#sm11, #sm17 { clear: left; }
+.crumb { float: left; padding: 2px; display: inline; background-color: #cff; list-style-image:url('arrow.gif'); }
+.effrat { float: right; color: #ddd; } /* text-decoration: line-through; } */
+.cc { display: block; clear: right; }
+.sugg {}
+.note {}
+.desc { border: 1px solid #009; padding: 4px; }
+.similar {}
+.example {}
+.subs {}
+.relat { font-weight: bold; margin: 0 0 3px 0; }
+#duration { float: left; }
+.source { display: none; }
+#rcm { display: none; }
+.i18nerr { color: #600; background-color: #ffc; text-align: center; }
+.subcat { float: left; padding: 8px; width: 22%; margin: 1em 0px; }
+.subcat a, .subcat a:link, .subcat a:visited, .subcat a:active, .subcat a:hover, .subcat span { display: block; border: 3px outset #0c6; text-align: center; padding: 0.25em; background-color: #0c6; color: #105; width: 98%; height: 6em; margin-top: -2.5em; text-decoration: none; font-size: 0.96em; }
+.menu { border: 5px ridge; border-bottom: 0px; padding: 7px 7px 0 7px; margin: 0; }
+.drill { margin: 0px; }
+table.progress { width: 100%; } 
+table.progress tr td { height: 7px; padding: 0px; margin: 1px; }
+table.progress tr td p { background-color: #fff; color: #fff; padding: 2px; margin: 0px; font-size: 6pt; }
+/*.progress { position: relative; }
+.progress div { width: 64%; }
+.progress div div { width: 32%; }
+.progress div div img { float: left; } */
+.t0 { background: #f99 url('red.gif'); }
+.t1 { background: #0f0 url('grn.gif'); }
+/* .missing { float: left; margin: 2px; } */
+.misscont1 { margin: 2px; font-family: monospace; font-size: 10pt; }
+.misscont2 { float: left; border: 1px solid #000; margin: 1px; padding: 2px; }
+.clearit { clear: left; clear: right; clear: both; display: block; height: 1em; padding: 0; margin: 0; }
+.newstat { margin: 5px; padding: 0px; float: left; border: 3px inset #b0b0cc; text-align: center; }
+.oldstat { margin: 5px; padding: 0px; float: left; border: 3px inset #4040ff; text-align: center; }
+.newstat img, .oldstat img { display: block; margin: 0; padding: 0; }
+

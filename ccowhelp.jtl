@@ -3,17 +3,18 @@
 <html xmlns="http://www.w3c.org/1999/xhtml" lang="EN">
 <head>{% block head %}
 	<title>{% block title %}{{ config['site'] }}: {{ var['title'] }}{% endblock %}</title>
-	<link rel="stylesheet" type="text/css" href="main.css" />
+	<link rel="stylesheet" type="text/css" href="main.css" />{% if var['custom'] %}
+	<link rel="stylesheet" type="text/css" href="{{ var['custom'] }}.css" />{% endif %}
 {% endblock %}</head>
 <body>
 		{% if var['crumbs'] %}
 		<ul class="loaf" id="breadtrail">
 			{% for crumb in var['crumbs'] %}
-			<li class="crumb" id="sm0{{ crumb[0] }}"><a href="{{ crumb[1] }}">{{ crumb[2]|e }}</a>{% if var['crumbdiv'] %} &gt;{% endif %}</li>
+			<li class="crumb" id="sm0{{ crumb[0] }}"><a href="{{ crumb[1] }}{% if var['style'] %}{% if var['crumbdiv'] %}&{% else %}?{% endif %}{{ var['style'] }}{% endif %}">{{ crumb[2]|e }}</a>{% if var['crumbdiv'] %} &gt;{% endif %}</li>
 			{% endfor %}
 		</ul>
 		{% endif %}
-
+		<p class="clearit"> </p>
 		{% if var['code'] %}
 			{% if var['expl'] %}
 		<h1 id="sm17">{{ var['catname'] }}</h1>
@@ -22,24 +23,24 @@
 			{% else %}
 		<h1 id="sm11">#{{ var['cattrim'] }}: {{ var['catname']|e }}</h1>
 		<div class="content" id="sm12">
-				{% if var['cattrim'] %}
-			<p class="note" id="sm01">If you are searching for this topic, add <strong>cowc:#{{ var['cattrim'] }}</strong> to your search criteria.</p>
-				{% endif %}
-				{% if var['catmul'] %}
-			<p class="sugg" id="sm03">If the site/work covers multiple categories, its category might be  <a href="{{ var['uri'] }}?lang={{ var['lang'] }}&cowc={{ var['catmul'] }}"> #{{ var['catmul'] }}: {{ var['muldesc']|e }}</a>, and the code to designate it as such would be <strong>&lt;meta name="cowc" content="#{{ var['catmul'] }}" /&gt;</strong>.</p>
-				{% else %}
-			<p class="note" id="sm13">The snippet for this category is: <strong>&lt;meta name="cowc" content="#{{ var['code'] }}" /&gt;</strong></p>
-				{% endif %}
-			<p class="note" id="sm02">You can add this snippet to your HTML's head section to enable search engines that use CCOW to categorize your site.</p>
 			<div class="menu" id="sm14" style="border-color: #{{ var['border'] }};">
 			{% endif %}
 			{% include var['catinf'] ignore missing %}
-			{{ var['noinf'] }}
+			{{ var['noinf'] }}{% if var['suggsubs'] %}You can help fill out this category. Visit <a href="{{ var['sugurl'] }}?lang={{ var['lang'] }}&cowc={{ var['code'] }}{% if var['style'] %}&{{ var['style'] }}{% endif %}">{{ var['code'] }} Divisions</a> to help.{% endif %}
+				{% if var['cattrim'] %}
+			<p class="note" id="sm01">If you are searching for {{ var['catname']|e }}, add <strong>cowc:#{{ var['cattrim'] }}</strong> to your search criteria.</p>
+				{% endif %}
+				{% if var['dosnip'] %}{% if var['catmul'] %}
+			<p class="sugg" id="sm03">If the site/work covers multiple categories, its category might be  <a href="{{ var['uri'] }}?lang={{ var['lang'] }}&cowc={{ var['catmul'] }}{% if var['style'] %}&{{ var['style'] }}{% endif %}"> #{{ var['catmul'] }}: {{ var['muldesc']|e }}</a>, and the code to designate it as such would be <strong>&lt;meta name="cowc" content="#{{ var['catmul'] }}" /&gt;</strong>.</p>
+				{% else %}
+			<p class="note" id="sm13">The snippet for this category is: <strong>&lt;meta name="cowc" content="#{{ var['code'] }}" /&gt;</strong></p>
+				{% endif %}
+			<p class="note" id="sm02">You can add this snippet to your HTML's head section to enable search engines that use CCOW to categorize your site.</p>{% endif %}
 			{% if var['subcats'] %}
 				<p class="drill" id="sm15">If this is not correct, choose a more specific category from the list below:</p> 
 				<p class="clearit"> </p>
 				{% for subcat in var['subcats'] %}
-				<p class="subcat"><a href="{{ var['uri'] }}?lang={{ var['lang'] }}&cowc={{ subcat[0] }}">{{ subcat[1] }}: {{ subcat[2]|e }}</a></p>
+				<p class="subcat"><a href="{{ var['uri'] }}?lang={{ var['lang'] }}&cowc={{ subcat[0] }}{% if var['style'] %}&{{ var['style'] }}{% endif %}">{{ subcat[1] }}: {{ subcat[2]|e }}</a></p>
 				{% endfor %}
 			{% endif %}
 			<p class="clearit"> </p>
@@ -48,13 +49,13 @@
     {% else %}
 		<h1 id="sm10">{{ var['title'] }}</h1>
 		<div class="languages">
-			<p class="lingua"><a href="{{ var['uri'] }}?lang=en">Language: English</a></p>
-			<p class="lingua"><a href="{{ var['uri'] }}?lang=es">Idioma: Español</a></p>
+			<p class="lingua"><a href="{{ var['uri'] }}?lang=en{% if var['style'] %}&{{ var['style'] }}{% endif %}">Language: English</a></p>
+			<p class="lingua"><a href="{{ var['uri'] }}?lang=es{% if var['style'] %}&{{ var['style'] }}{% endif %}">Idioma: Español</a></p>
 		</div>
 		{% endif %}
 	{% block footer %}<a href="progress.htm">{{ var['progress'] }}</a>
 
-	<p class="clearit">Don't know what these categories mean? Check out <a href="ccowhelp.py?lang=en&cowc=yxxx">Category Explanation</a>
+	<p class="clearit">Don't know what these categories mean? Check out <a href="ccowhelp.py?lang=en&cowc=yxxx{% if var['style'] %}&{{ var['style'] }}{% endif %}">Category Explanation</a>
 	<p class="clearit"> </p>
 
 	<div class="cc" id="sm11">This helper application is released under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike</a> license.

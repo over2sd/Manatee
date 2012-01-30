@@ -11,7 +11,7 @@ import codecs
 from sqlalchemy import (create_engine, Column)
 from jinja2 import (Environment, FileSystemLoader)
 
-BUILDNUM = "095"
+BUILDNUM = "099"
 MYNAME = os.path.basename(sys.argv[0])
 
 import tmpvalues
@@ -23,6 +23,21 @@ def showTop(t):
   """
   print "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html xmlns=\"http://www.w3c.org/1999/xhtml\" lang=\"EN\">\n<head>\n\t<title>" + t + "</title>\n\t<link rel=\"stylesheet\" type=\"text/css\" href=\"main.css\" />\n</head>\n<body>"
 
+def chooseStyle(c):
+  """Given a three-letter code 'c', this function returns a string
+  containing the relative filename (without extension) of a stylesheet
+  to load after the main sheet, allowing users to view the helper
+  application in a different style.
+  alt = First alternate stylesheet. Subcats show in a list instead of a grid.
+  """
+  if c == None: return None
+  c = c[:3]
+  styledict = {}
+  styledict['alt'] = "alpha"
+  if c in styledict:
+    return styledict[c]
+  else:
+    return None
 
 def showFoot(lang):
   """Given a program name and a 2-character language abbreviation, prints
@@ -300,24 +315,31 @@ def main():
   query = cgi.FieldStorage()
   lang = query.getvalue("lang","en")[:2]
   var['lang'] = lang
+  langarg = query.getvalue("lang",None) # needed for query present, language not
   code = query.getvalue("cowc","XXXX")
   code = str(cleanCode(code))
+  style = query.getvalue("style",None)
+  if style: var['style'] = "style=" + style
+  style = chooseStyle(style)
+  if style: var['custom'] = style
   if "site" not in config:
     config['site'] = "Manatee"
   # check for query string
-  if len(query) == 0:
+  if len(query) == 0 or langarg == None:
     # if no query, offer lang selection
     var['title'] = "Select Language"
   else:
   # if query provided, show a page...
     var['code'] = code
     var['title'] = var['code']
+    var['dosnip'] = True
+    showsubs = False
     stage = getStage(var['code'])
-    var['stage'] = stage
     cat00 = str(code[:stage])
     if stage > 0:
       var['cattrim'] = cat00
     if stage < 4:
+      showsubs = True
       for i in range(4 - stage): cat00 += '0'
       var['catmul'] = cat00
       var['muldesc'] = glot(cat00,sqlconn,lang,4) # the multiplicity topic desc will be stage 4.
@@ -328,24 +350,21 @@ def main():
         var['catname'] = glot("sxpl",sqlconn,lang)
         stage = 3 # the subcat explanations are stage 4, so we need to consider yxxx to be stage 3.
       else: # explain a single subcat type
+        del var['catmul']
         var['cattrim'] = '*' + code[3]
-        var['stage'] = 4 # make sure we don't show subcats
+        stage = 4 # make sure we don't show subcats
+        del var['dosnip']
+        showsubs = False
+    var['stage'] = stage
     var['catinf'] = os.path.join("cats",lang,code)
     var['crumbs'] = glotCrumbs(sqlconn,code,stage,lang)
-    if len(var['crumbs']) > 1: var['crumbdiv'] = True
+    if len(var['crumbs']) > 0 and code[0] != 'X' and code[0] != 'x': var['crumbdiv'] = True
     var['border'] = cat00[:3]
-    if stage < 4:
+    if showsubs:
       var['subcats'] = glotSubs(sqlconn,code,stage,lang)
   var['progress'] = glot("spro",sqlconn,lang)
 #  print "<!-- Code: " + var['code'] + " stage " + str(var['stage']) + " language: " + var['lang'] + " -->"
 
-  """
-  showFoot(lang)
-  test = "SELECT ctext FROM category WHERE ccode = 'd003';"
-  result = sqlconn.execute(test)
-  for row in result:
-    print row['ctext']
-# """
   print template.render({'config': config, 'var': var}).encode("utf-8")
   sqlconn.close()
   exit(0)

@@ -1,0 +1,153 @@
+#!/bin/bash
+set -e
+
+### Username of the WWW server (needs access to the database)
+web=www-data
+
+### Username of the CCOW database administrator
+user=`whoami`
+
+### Hostname of the DBA's access computer
+	# Use output of hostname function
+# host=`hostname`
+	# Use localhost
+host=localhost
+	# Use a specific host
+# host=192.168.1.10
+	# Allow from anywhere (not recommended)
+# host="%"
+
+### Database host server
+server=127.0.0.1
+
+### Database server options. For example, if your username rquires
+###  a MySQL password, or your server uses a nonstandard port number.
+	# Ask for password
+# options=-p
+	# Use this as a password
+# options=-P 1234
+	# Use the first argument as a password
+# options=-p $1
+	# Other options
+# options=""
+
+### If you need to put these files on a remote server, create a temporary local
+###  directory, copy the files manually to the server, and carefully edit the
+###  *.is files in your CGI directory.
+
+### Local directory of HTML fragments (your HTML directory, as seen by the WWW server)
+#htmdir=/var/www/ideal
+htmdir=~/www/ccow
+
+### Local directory where CGI scripts are stored
+###  This directory must have CGI execution turned on for the system to work!
+cgidir=$htmdir
+
+### Local directory where administration binaries will go
+admindir=/home/${user}/ccow
+
+### Delete existing database? (For debugging purposes)
+delold=0
+
+### Copy files?
+scriptcopy=1
+
+### Change this to 1 when you've edited these variables
+edited=0
+
+###  Uncomment one of the next two pairs of lines to create directory with script
+# mkdir $cgidir
+# mkdir ${cgidir}/template
+
+# sudo mkdir $cgidir
+# sudo mkdir ${cgidir}/template
+
+###  Uncomment one of the next two line to create directory with script
+# mkdir $htmdir
+# sudo mkdir $htmdir
+
+###  Uncomment one of the next two line to create directory with script
+# mkdir ${cgidir}/avatars
+# sudo mkdir ${cgidir}/avatars
+
+
+
+### Do not edit anything below this line. ###
+### If the above values are correct, change 'edited' to 1. ###
+case $edited in
+	0)
+		echo -e "\n*** Warning: You need to verify the variables before setting up CCOW. ***\n"
+		echo "This script currently has these settings:"
+		echo "  The Web site runs as this user: $web"
+		echo "  The CCOW administrator (you?) will be this user: $user"
+		echo "  You'll connect to CCOW for admin from this host: ${host}"
+		echo "  The CCOW server is at this host: $server"
+		echo "  CCOW's HTML files will be stored in $htmdir"
+		echo "  CCOW's CGI binaries will be stored in $cgidir"
+		echo "  Administrator tools will go in $admindir"
+		echo " (Assumed these directories are extant and writable by you (${user}?))"
+		if [ $scriptcopy -eq 1 ]; then echo "  Runfirst will attempt to copy files to these locations."
+		else echo "  Runfirst will NOT copy files to their destinations."
+		fi
+		if [ $delold -eq 1 ]
+		then
+			echo "  Runfirst will delete the old 'ccow' database."
+		fi
+		echo "  If these are correct, change 'edited' to 1"
+		echo -e "\n** Perhaps 'pico runfirst'? **\n"
+		exit 0
+		;;
+	1)
+		read -s -p "Please enter the SQL root assword: " sqlpass
+		;;
+esac
+
+echo "Attempting setup..."
+echo "GRANT ALL ON ccow.* TO '${user}'@'${host}';" > rootset.msq
+case $delold in
+	0)
+		# Assuming database does not exist.
+		;;
+	1)
+		echo -e "** Debug activity: Deleting old database! **"
+		echo "DROP DATABASE ccow;" >> rootset.msq
+		;;
+esac
+
+# echo "The following prompt refers to the MySQL root password, not the system root password:"
+echo "Attempting to grant the administrator database access."
+mysql -h $server -u root --password=${sqlpass} < rootset.msq
+echo "Attempting to build the CCOW database."
+mysql -h $server $options < ccow.msq
+echo "GRANT EXECUTE, INSERT, LOCK TABLES, SELECT, UPDATE ON ccow.* TO '${web}'@'localhost';" > rootset.msq
+##### echo "GRANT DELETE ON ideal.commentview TO '${web}'@'localhost';" >> rootset.msq
+echo "Attempting to grant the Web server database access."
+mysql -h $server -u root --password=${sqlpass} < rootset.msq
+echo "Done."
+
+
+
+echo $server > sqlserver.is
+echo ideal > sqlbase.is
+# echo $htmdir > htfiledir.is
+echo $web > webowner.is
+
+case $scriptcopy in
+	0)
+		;;
+	1)
+		echo "Copying script files..."
+		cp *.py ${cgidir}/
+		cp *.jtl ${cgidir}/template
+		cp *.is ${admindir}/
+
+		echo "Copying administrator binaries..."
+		# mdkir $admindir
+		# sudo mkdir $admindir
+		# cp usered ${admindir}/
+		;;
+esac
+
+#echo "Running setup program..."
+#./setupccow.py ### Binary setup program... to set the admin's refcode, etc.
+#echo "If you forget this code, you can view it by running ./setupccow.py again."

@@ -1,0 +1,8 @@
+Content-Type: text/css
+
+
+/* CSS */
+
+.subcat * { float: none; width: 95%; height: 1em; }
+.subcat a, .subcat a:link, .subcat a:visited, .subcat a:active, .subcat a:hover, .subcat span { border-color: #06c; text-align: left; padding: 0.25em; background-color: #09f; color: #103; width: 98%; height: inherit; margin: 2px; text-decoration: none; font-size: 0.96em; }
+.subcat { float: none; width: 95%; height: 0.98em; margin-top: -0.75em; }
