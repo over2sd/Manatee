@@ -1,0 +1,16 @@
+CCOW Roadmap:
+
+Stage 1 - A helper program that allows users to locate the appropriate
+classification code for a particular topic category.
+
+Stage 2 - A program to faciliatate collaboration between experts in various
+fields to allow them to make suggestions for the remaining categories, vote
+on the suggestions, and finalize the results of those decisions for use
+by the helper application from Stage 1.
+
+Stage 3 - Spider modules search engines can use to crawl the meta data
+proposed by this project, to compile trusted authority repositories that
+track false information or well-established sites, and to become trusted
+authorities themselves.
+
+More information can be found at the project description page: <url here>

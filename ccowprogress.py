@@ -1,4 +1,7 @@
 #!/usr/bin/python -tt
+"""This program will pull information from the database and generate
+a PNG image representing the progress of the categorization effort.
+"""
 
 import sys
 
@@ -12,7 +15,6 @@ L1W = 106
 L4O = 3
 L3O = 2
 L2O = 1
-dict = {}
 
 # Function: pull all values from the "en" string table into a single dict.
 def dictpop(lang):
@@ -21,9 +23,10 @@ def dictpop(lang):
   network usage.
   This function hasn't been written yet.
   """
+  dict = {}
+  return dict
 
-
-def isAssigned(code):
+def isAssigned(code,dict):
   """Given a category code, checks for its presence in the previously
   populated dictionary and whether its value is [U* ([Unassigned],
   [Untranslated], etc).
@@ -38,7 +41,7 @@ def isAssigned(code):
   else:
     return False
 
-# Function: 
+# Function: (next step)
 
 
 # Standard boilerplate to call the main()
