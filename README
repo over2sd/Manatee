@@ -1,7 +1,7 @@
 CCOW Roadmap:
 
 Stage 1 - A helper program that allows users to locate the appropriate
-classification code for a particular topic category.
+classification code for a particular topic category. (First version completed Jan 28, 2012)
 
 Stage 2 - A program to faciliatate collaboration between experts in various
 fields to allow them to make suggestions for the remaining categories, vote
@@ -13,4 +13,4 @@ proposed by this project, to compile trusted authority repositories that
 track false information or well-established sites, and to become trusted
 authorities themselves.
 
-More information can be found at the project description page: <url here>
+More information can be found at the project description page: http://github.com/over2sd/Manatee/blob/master/index.htm
