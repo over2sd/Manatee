@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3c.org/1999/xhtml" lang="EN">
+<link rel="stylesheet" type="text/css" href="index.css">
+<head><!-- Lincoln Sayger - skrey-reg@cox.net --><title>Card Catalog of the Web - Index</title></head>
+<body>
+<div class="header">
+<img class="logo" src="manateelogo.png" />
+<br />
+<span class="lnudge">Card Catalog of the Web</span>
+</div><div class="content">
+<h1>General Information</h1>
+<h2>About Me</h2>
+<p>My name is Lincoln Sayger. I have a Communications/Journalism degree from the University of West Florida.
+</p><p>My interests include writing essays and novels, and I use the Internet for a fair portion of my research. Because of this, I believe that the proposal contained herein will be greatly helpful to me and to other writers.
+</p>
+<h2>About This Site</h2>
+<p>Search engines and indices have helped to make easier the task of finding information online, but they have their limits. I propose to develop a system for Web pages, sites, and domains to be categorized using the Dewey Decimal System, the Library of Congress Classification, or a similar system of classification.
+</p><p>The process of developing a new system, based on the lessons of previous systems and including categories which have emerged as having viability from the intensity with which our society has adopted the World Wide Web, has begun.
+</p>
+<h1>Specific Information</h1>
+<a href="#problem">Here is the Problem</a><br />
+<a href="#paper">How Paper Libraries Have Handled Categorization and Computer Searches</a><br />
+<a href="#proposal">The CCOW Proposal</a><br />
+<a href="#techimp">Technical Implementation of the System, or How Webmasters Would Use It</a><br />
+<a href="#semimp">Semantic Implementation of the System, or How Search Engines and Directories Would Process It</a><br />
+<a href="read.htm">Recommended Reading on the Subjects of Categorization and Searching</a><br />
+<a href="https://github.com/over2sd/Manatee">Project GitHub page</a><br />
+<a href="status.htm">Project status</a>
+<!-- <a href="ccowhelp.py">CCOW Helper Application</a><br />
+<a href="ccowsugg.py">Suggest Category Divisions</a><br /> -->
+<br />
+<a name="problem"><br /></a><br />
+<h2>The Problem</h2>
+<h3>The Web's Greatest Strength Is Its Greatest Weakness</h3>
+<p>No one can rationally deny that the World Wide Web, in addition to other things it is and does, serves a vast storehouse of information. Since educational institutions get a separate top-level domain, and since many hundreds of these institutions have some sort of Web site, with many of those sites publishing academic research and critical articles, credible information on a vast myriad of topics is available to all who have access to World Wide Web sites. In addition to this information stored on academic servers, credible information also exists on some other sites, including credible authorities in the media and commercial sites related to a specific topic. These other sites gain credibility by having reliable information, so they have a vested interest in making sure what you get from them is accurate.</p>
+<p>However, the very multitude of sites and documents leads to one of the main problems with researching a given subject on the Internet. As LaBrie and St. Louis put it, large amounts of data make it possible "to have quality information captured in a knowledge management system, but to have no effective mechanism to retrieve that knowledge" <a class="foot" href="read.htm#r01">1</a>. Since "there is no comprehensive 'card catalogue' system to organize the gargantuan library," as TIME Magazine points out <a class="foot" href="read.htm#r02">2</a>, Internet users must rely on search engines, directories and indices, or on browsing along the hyperlinks sites provide. Browsing hyperlinks is, of course, very slow and unhelpful.</p>
+<h3>Search Engines and Indices Have Arisen to Help Users Find Information</h3>
+<p>In 1990, the first search engine, Archie, was created <a class="foot" href="read.htm#r03">3</a>, and others soon followed: Gopher, Veronica, Jughead, and more familiar names such as WebCrawler, Yahoo!, and Lycos in 1994 <a class="foot" href="read.htm#r04">4</a>.</p>
+<p>These search engines and directories, along with their successors, have made finding information on the Web much easier than using links to find information, but all search engines and directories have strengths and weaknesses, and those weaknesses can be problematic.</p>
+<p>Directories are good at breaking things down into topics, but they are very slow at indexing new sites, and they often cover only the most common topics. Search engines find the greatest number of sites and include the most, but they have problems of their own.</p>
+<h3>Search Engine and Directory Problems</h3>
+<p>Search engines often use shortcuts to work around the limits of machine intelligence, but those workarounds, while they often lead to improved searching, allow for various means of cheating.</p> <h4>Limitations 1: Limits of AI and Volunteers for Keyword Indexing</h4>
+<p>Search engines use these shortcuts because of the limits of various factors in their systems and because of limits in communication between these various factors. Shortcuts are the only way to perform searches in acceptable periods of time given the limits of disk space, working memory, search term matching, analyzing time, bandwidth, and responsiveness to the addition of new pages to the World Wide Web. Indices also have to cope with limits, because their own artificial intelligence has the same shortcomings, and because those maintained by staff or volunteers must cope with the limits of human data processing speed. Human-categorized pages will be more accurately classified than machine-categorized pages, but the trade-off is speed.</p>
+<h4>Limitations 2: Meta Tag Multiplicity, Cheating</h4>
+<p>Search engines often analyze the full text of a page, which allows for the inclusion in the body of a page of highly rated search terms that have nothing to do with the actual content of the site. Search engines also use meta keyword tags for search criteria, which allows a site author to include multiple related search terms people are likely to use that might not be in the body text, but it also allows unscrupulous authors to include multiple disparate terms that have no relation to the actual page content.</p>
+<h4>Limitations 3: Multiple Meanings, Language Barriers</h4>
+<p>Search engines also face difficulty in dealing with human languages. In machine code, items that are used for a variety of functions inherit some context from the functions that call them, but human language uses words for multiple functions and may or may not have anything to lend context to them. A word might appear alone on a page.</p>
+<p>Consider "SHALIMAR" as an example of a word with multiple uses. It can refer to a city <a class="foot" href="read.htm#r05">5</a>, a perfume <a class="foot" href="read.htm#r06">6</a>, A novel by Manohar Malgonkar <a class="foot" href="read.htm#r07">7</a>, or a section of the Kolkata suburban railway system <a class="foot" href="read.htm#r08">8</a>, as well as other possibilities, such as singer/musical group names.</p>
+<p>But a person using it as a search term usually will want only one of those meanings. In addition to multiple meanings, a word may be from a different human language than the main language indexed by the search engine. These semantic differences, except for some common words, are unlikely to be resolved by context, since the cultural context that would resolve these differences for a human are not available to a machine.</p>
+<p>Paper Libraries are a good place to start when considering possible methods of classifying materials</p>
+<a name="paper"><br /></a><br />
+<h2>Paper Libraries and Categorization</h2>
+<h3>Early Classification</h3>
+<p>Paper libraries are a good place to start when considering possible methods of classifying materials, since libraries have been using classification systems to sort books and other materials for many decades. In fact, collections of materials have used coding systems for thousands of years <a class="foot" href="read.htm#r09">9</a>. Today's libraries are organized by standardized systems which are reasonably well-understood by the general reading public. The two most commonly used classification systems by public and university libraries are the Dewey Decimal Classification system and the Library of Congress Classification system.</p>
+<h3>Dewey Decimal Classification</h3>
+<p>The Dewey Decimal Classification system was developed by Melvil Dewey during the 1870s <a class="foot" href="read.htm#r10">10</a>. It uses a system of ten major categories (called classes) broken up into one hundred subcategories (called divisions), ten for each class, and into one thousand subcategories (called sections), ten for each division, though not all of the available numbers are in use <a class="foot" href="read.htm#r11">11</a>.</p>
+<h3>Library of Congress Classification</h3>
+<p>The Library of Congress Classification system was developed in the late 19th century and continues to be developed <a class="foot" href="read.htm#r12">12</a>. The original design was influenced by the leadership of Herbert Putnam and by the Dewey Decimal Classification and the Cutter Expansive Classification <a class="foot" href="read.htm#r13">13</a>.</p>
+<h3>Comparison of the DDC and the LCC, The Addition of Computers to Libraries</h3>
+<p>The Dewey system is strictly hierarchical, while the LCC is loosely hierarchical. Both have served libraries well for decades. But libraries have in recent years made efforts to bring the data processing power of computers to the organization and access of libraries.</p>
+<p>Antelman, et al, summarize the history of online card catalogs, pointing out that "first generation online catalogs (1960s and 1970s) provided the same access points as the card catalog," that second-generation catalogs provided Boolean searching but didn't solve the difficulties of searching by subject, and that newer catalogs provide for some partial matching of terms <a class="foot" href="read.htm#r14">14</a>. In spite of the adoption by some libraries of somewhat hierarchical databases, many libraries still use card catalogs that are similar in function to Internet search engines, which have all those drawbacks related to free text searching.</p>
+<p>Because of these efforts to bring computers into library classification, perhaps we can learn from their experience and more elegantly bring the structure of library classification to the Internet. Combining hierarchy with keyword searching could lead to faster, more efficient paths in knowledge seeking.</p>
+<br />
+<p>I propose a means of adding hierachy to free text searching.</p>
+<a name="proposal"><br /></a><br />
+<h2>The CCOW Proposal</h2>
+<h3>A Card Catalog of the Web</h3>
+<p>I propose a means of adding hierarchy to free text searching. Since libraries have made good use of cataloging books based on their subject within a hierarchy or a set of subject headings, and since the advent of widespread computer use has given us the power to catalog keywords and other information in databases and quickly search the databases, why not solve the problem mentioned in passing in TIME's article, "there is no comprehensive 'card catalogue' system to organize the gargantuan library" <a class="foot" href="read.htm#r02">2</a>? Why not create a card catalog that people could use to find materials based on subject and author as well as title? Or why not give webmasters and search engines the power to turn search engines and indices into more powerful tools for finding the information we really want?</p>
+<h3>Users Will Benefit</h3>
+<p>Search engines could give users the ability to add a category limiter to their search queries, and indices could quickly sort Web sites into appropriate categories, which could then be searched for sites within the selected categories.</p>
+<p>I believe the best way to accomplish this improvement in Internet searching (and, one would hope, in electronic card catalogs) is for webmasters and search engines to adopt a unified standard for a new meta tag that would allow webmasters to categorize their own sites, trusted authority servers to maintain lists of uncategorized or miscategorized sites so search engines can match them with the proper categories, and search engines to group sites in appropriate categories.</p>
+<h3>The New meta cowc Tag</h3>
+<p>The tag would look like this: &lt;meta name="cowc" value="#1234"&gt; Where value is the categorization of the page under the Catalog of the Web Classification.</p>
+<p>This new system will require webmasters to categorize their pages based on the COWC, so I have begun developing the categories. The general system is a hierarchy, and the categories aim to make classification simple and easy-to-remember.</p>
+<h3>How Material is Classified with the CCOW Classification</h3>
+<p>COWC uses four hexadecimal digits to form a number for each of around 65000 categories. Each level except the least significant uses one of a small number of schemes. There is, for example, a general scheme, a geographic scheme, a linguistic scheme, and a historic scheme, depending on the type of the category to be divided.</p>
+<h3>The Hexadecimal Numerals in General Division</h3>
+<p>In the general categorization, 0 denotes a topic of multiplicity or collections. Because of this, a Web site that covers multiple topics can still categorize itself in a single position. For example, a metasearch search engine, such as <a href="http://www.dogpile.com">Dogpile</a> would use the category #0000, because it searches a number of search engines, which gives it access to almost unlimited types of data. A site dealing with a multitude of languages might fall into the category of #3100, while a site dealing with multiple topics on the English language might fall into the category of #3120.</p>
+<p>The other categories are similarly divided and subdivided. 1 denotes topics of generality that are not topics of multiplicity. For example, encyclopedia sites would fall into #1100 or one of the other 255 categories below the top levels 11, because they cover general knowledge. 2 has to do with mentality, or the psychology or philosophy of a topic, so under each of the other categories and subcategories, there might be a section dealing with philosophy, such as the philosophy of faith healing (#6c20). 3 is the category of communicability or communications, which is where topics of languages, rhetoric, and transportation may be found.</p>
+<p>4 denotes sociality and houses things like social science. 5 is empiricism and holds the hard sciences and mathematics. 6 is for vitality and holds topics of health or the maintenance of non-biological systems.</p>
+<p>7 is for provision and holds things like agriculture. 8 is spatiality and covers topics such as geography, cartography, and non-chemical astronomy. 9 is technology.</p>
+<p>The numeral a denotes memorability and covers topics of memory or history. The numeral b is for artistry and covers topics of artistic expression. The numeral c covers religion, rituality, and faith, so biographies of religious figures would be found under a subheading of c, somewhere between #ec00 and #ecff.</p>
+<p>The numeral d is the number of legality, law, and political science. The numeral e signifies generally that a category or subcategory has to do with specificity or individuality. This topic would cover biographies and personal home pages. The specific method for categorizing home pages has not been decided, but there are so many of them on the Internet that they get to share (#ee00-#eeff) the e category with biography. Finally, f signifies marginality, abnormality, and fiction. In addition to fiction (#f000-#fe00), there is space here for new, marginal, controversial, conjectural, and unaccepted topics (#ff00-#ffff).</p>
+<p>These categories will all be assigned as there is time and demand for them.</p>
+<p>The other types of division mentioned have similar significance for each numeral.</p>
+<p>How do webmasters use this?</p>
+<a name="techimp"><br /></a><br />
+<h2>Technical Implementation,<br />or How Webmasters Would Use It</h2>
+<h3>Selection</h3>
+<p>When the system is more fully developed, webmasters will be able to visit a Web page maintained by the CCOW's authoritative agency (either an individual or a group) and browse the category tree.</p>
+<p>The program <a href="http://github.com/over2sd/Manatee/blob/master/ccowhelp.py">ccowhelp.py</a> provides this helper application.</p>
+<p>Having located the category that best matches the webmasters' sites or a page on their sites, the webmasters will see the proper category number and categorize their pages.</p>
+<h3>Tagging</h3>
+<p>Webmasters will categorize their pages by adding a &lt;meta name="cowc" content="#1357"&gt; tag to the head section of their HTML.</p>
+<p>This tag can then be read by search engine spiders and directory maintainers, who will be able to put the Web site in an appropriate category.</p>
+<h3>Visitors</h3>
+<p>Having been properly categorized, the Web site will receive a better ratio of visitors who want to see the site compared to visitors who were looking for something unrelated to the site.</p>
+<p>How search engines will use this information and how cheating can be diminished are covered in the section on Semantic Implementation</p>
+<a name="semimp"><br /></a><br />
+<h2>Semantic Implementation,<br />or How Search Engines Would Use It</h2>
+<h3>Making Sense of the Numbers</h3>
+<p>When a search engine or index decides to use the CCOW system and store cowc data in its database, it does not, at first, need to make sense of the numbers. But if users are going to reap the benefits of this system, changes must be made at some point to the way the search engine or index processes the stored information.</p>
+<p>The capabilities for this system can be enabled for a search engine or index by the administrators of the search engine. Visiting the CCOW authority's Web site, they can code the category hierarchy to their system.</p>
+<h3>Giving Users Access</h3>
+<h4>Adding a Delimiter String</h4>
+<p>One method of allowing users to search with the hierarchy is to add a delimiter string, such as "cowc:", which would be used similar to "domain:".</p>
+<h4>Directory, Then String</h4>
+<p>With the power this system gives robots to automatically put URLs in specific categories, indices can begin using robots or crawlers to find new sites to be added to their directories, and search engines can make their own directories with little extra effort.</p>
+<p>With the directory in place, users can browse to a general directory and then apply their search string. This will avoid most of the multiple-meaning problems inherent in a broad and uncategorized free text query.</p>
+<h3>Downward Inclusion</h3>
+<p>The hierarchical nature of the system allows for easy inclusion and exclusion for searching. A search in the 12 subcategory should search all categories between #1200 and #12ff while excluding results from #1300 and up.</p>
+<p>The same is true whether the user browsed to 12xx or entered "cowc:#12" in the search string.</p>
+<h3>Preventing Cheaters</h3>
+<p>This system also has the potential, with some clever coding, to help crawlers discover cheating Web sites.</p>
+<p>The subjective nature of keywords has probably been a major reason most search engines do not employ report abuse features to alert them to mismatched results. But with a hierarchy, there is a more objective standard, and search engines can increase the reliability of their results.</p>
+<p>A number of possibilities exist to make catching cheaters easier.</p>
+<h4>Report Links</h4>
+<p>When a search query is served using the hierarchy, report links can be added to each result so that the porn site that somehow got into the category for childrens' toys can be reported. If enough searchers report the site, an administrator can verify it and move it to an appropriate category.</p>
+<p>This information can then be compiled by trusted authorities.</p>
+<h4>Trusted Authorities</h4>
+<p>Trusted authorities can be established to serve XML files to search engines and indices with URLs and their correct categories.<p>
+<p>This can be accomplished with simple records, such as:</p>
+<code>
+&lt;record&gt;
+<br />&nbsp; &nbsp; &lt;url&gt;http://someadultsite.com&lt;/url&gt;
+<br />&nbsp; &nbsp; &lt;name&gt;Site's Name&lt;/name&gt;
+<br />&nbsp; &nbsp; &lt;cowc&gt;#b55f&lt;/cowc&gt;
+<br />&lt;/record&gt;
+</code>
+<p>When the search engine records the URL of a Web site, it will check that URL against the domains and page URLs listed on the trusted authority's server. If a conflict occurs between a subpage on a listed domain, the crawler will flag the URL for human processing or record the URL with the trusted authority's categorization.</p>
+<p>This will help prevent sites from being recorded in inappropriate categories.</p>
+<h4>Category Comparison Across Pages</h4>
+<p>When a home page server, such as GeoCities or Cox, is added to the database of a search engine or index, it should be categorized as an ISP or home page host. These and other special categories should be marked as allowed to have pages in virtual subcategories #ee00-#eeff, which is the category space for home pages, as well as allowed to have other categories under them.</p>
+<p>But when a domain that is not a home page host, such as history.com or joesantiques.com is added, its pages should be checked against other pages on the domain. If two pages on the same domain have unrelated categories, they should be marked for human processing. This will prevent a commercial site of any sort from simply adding pages to its Web site (or dynamically generating pages) that cover each of the 65000+ categories in an attempt to bring in visitors who are searching for something unrelated to their site's content.</p>
+<p>The main page of the domain (or in the case of ISPs and free and fee-based page hosts, the individual user directories) should contain the topmost category represented by their page. For example, CNN.com would probably put its front page under the category of #0c00, with its U.S. news section under the category of #0c31 for all pages in its national U.S. section. Likewise, for example, History.com could put its homepage under the category of #a000, with a category of #aa0a for pages referring to <a href="http://en.wikipedia.org/wiki/Mary_I_of_England">Mary I</a> because she is an English monarch from the 1500s, and #aa0a is European and Scandanavian History in the 1500s.</p>
+<p>However, if the search engine is checking categories against other pages on the same domain, History.com could not have a page categorized #31a5. A page with an unrelated category number would be either rejected from inclusion in the database or flagged for human intervention.</p>
+<p>With these and older safeguards in place, most users will be able on most queries using the hierarchy to find what they actually want to find without having to wade through sites trying to pull them into something they didn't want.</p>
+<h3>Related Sites</h3>
+<p>In addition to hindering cheaters, comparing categories can also help users find pages they might not have otherwise seen with the search keywords they chose.</p>
+<p>Similar to the function included in the Endeca-powered system of the Antelman, et al, study <a class="foot" href="read.htm#r14">14</a>, search engines could add category links to the results of every free text query. These category links would add that category marker to the query text and limit the search to that category.</p>
+<p>With these links, users can make a first query, look at the results, and click on the category link of a matching result to get more results that are in the right category. The ability of users, who do not normally stray much from their original queries <a class="foot" href="read.htm#r14">14</a> or try additional queries when a search fails on the first one, to find the information they seek would be increased by this allowance for users to jump from uncategorized searches into categorized searching and browsing. Spink, et al, found that "most people use few search terms, few modified queries ... and rarely use advanced search features" <a class="foot" href="read.htm#r15">15</a>.</p>
+<h3>Conclusion</h3>
+<p>I hope, with the features available of using categories within searches or searches within categories, and of traversing trees of pages instead of trying to divine the right magic words for a search query, users will be able to find information easily and efficiently without realizing that they are using an advanced feature, because its ease-of-use will be so intuitive. And when people see how much better they are finding what they seek, perhaps they will take time to learn the other advanced features, finally deeming them worth the effort.</p>
+<br />
+<a href="read.htm">There is more information available on these topics.</a><br />
+<p><br />&copy; Copyright 2007-2012 by Lincoln Sayger. All Rights Reserved.<br /></p>
+</div>
+</body>
+</html>
