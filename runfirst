@@ -128,7 +128,7 @@ echo "Done."
 
 
 echo $server > sqlserver.is
-echo ideal > sqlbase.is
+echo ccow > sqlbase.is
 # echo $htmdir > htfiledir.is
 echo $web > webowner.is
 
@@ -137,7 +137,7 @@ case $scriptcopy in
 		;;
 	1)
 		echo "Copying script files..."
-		cp *.py ${cgidir}/
+		for f in `ls *.py | grep -v progress`; do cp $f ${cgidir}/; done
 		cp *.jtl ${cgidir}/template
 		cp *.is ${admindir}/
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3c.org/1999/xhtml" lang="EN">
+<head>
+	<title>Manatee: Progress Report</title>
+	<link rel="stylesheet" type="text/css" href="main.css" />
+</head>
+<body>
+	<p>Return to <a href="ccowhelp.py">CCOW helper</a></p>
+	<p>The following sections were missing when the last progress report was run at {{ var['time'] }}:</p>
+		<div class="misscont2"><p class="misscont1">{% for miss in var['codes'] %}
+		<a href="ccowhelp.py?lang=en&cowc={{ miss[1] }}">{{ miss[2] }}</a>
+{% if miss[0] is divisibleby 10 %}</p>{% if miss[0] is divisibleby 100 %}</div><div class="misscont2"><p class="misscont1">{% else %}<p class="misscont1">{% endif %}{% endif %}{% endfor %}</p></div>
+
+</body>
+</html>

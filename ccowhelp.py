@@ -23,6 +23,7 @@ def main():
   try:
     with codecs.open('manatee.conf','rU','utf-8') as conf:
       lines = conf.readlines()
+      conf.close()
   except IOError as e:
     print " Could not open configuration file: %s" % e
 

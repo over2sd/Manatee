@@ -1,0 +1,5 @@
+
+2012-02-01:
+- Closed a file left open in ccowhelp.py
+- Started fleshing out ccowprogress.py
+- Started building missing.jtl and progress.jtl
