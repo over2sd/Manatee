@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import cgi
+import codecs
 import cgitb; cgitb.enable()
 
 def chooseStyle(c):
@@ -60,3 +61,25 @@ def hexchar(i):
   else:
     return None
 
+def loadConfig():
+  """Returns a dict containing the config options in the CCOW config file."""
+  lines = []
+  config = {}
+  try:
+    with codecs.open('manatee.conf','rU','utf-8') as conf:
+      lines = conf.readlines()
+      conf.close()
+  except IOError as e:
+    print " Could not open configuration file: %s" % e
+
+  for line in lines:
+    try:
+      line = line.strip()
+      if line:
+        values = [x.strip() for x in line.split('=')]
+        config[values[0]] = values[1]
+    except Exception as e:
+      print "There was an error in the configuration file: %s" % e
+  # TODO: Any strings from the config file that might be displayed or passed into the SQL server need to be validated here.
+#  config = validateConfig(config)
+  return config

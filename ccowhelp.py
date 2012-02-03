@@ -7,7 +7,7 @@ import os
 import codecs
 from jinja2 import (Environment, FileSystemLoader)
 from ccowi18n import (glot, glotCrumbs, glotCrumbs, glotSubs)
-from ccowcgi import (cgi, cleanCode, chooseStyle, getStage)
+from ccowcgi import (cgi, loadConfig, cleanCode, chooseStyle, getStage)
 from ccowsql import (create_engine)
 
 BUILDNUM = "099"
@@ -16,31 +16,12 @@ MYNAME = os.path.basename(sys.argv[0])
 def main():
   """Run if the program is called from the shell, of course."""
   print "Content-Type: text/html\n\n",
-
-  lines = []
-  config = {}
+  config = loadConfig()
   var = {}
-  try:
-    with codecs.open('manatee.conf','rU','utf-8') as conf:
-      lines = conf.readlines()
-      conf.close()
-  except IOError as e:
-    print " Could not open configuration file: %s" % e
-
-  for line in lines:
-    try:
-      line = line.strip()
-      if line:
-        values = [x.strip() for x in line.split('=')]
-        config[values[0]] = values[1]
-    except Exception as e:
-      print "There was an error in the configuration file: %s" % e
-  # TODO: Any strings from the config file that might be displayed or passed into the SQL server need to be validated here.
 
   here = os.path.dirname(os.path.abspath(__file__))
   env = Environment(loader=FileSystemLoader(here))
-  template = env.get_template(os.path.join("template",'ccowhelp.jtl'))
-  #  validateConfig(config)
+  template = env.get_template(os.path.join("templates",'ccowhelp.jtl'))
 
   # Create connection to SQL server (currently MySQL)
   engine = create_engine("%(host)s/%(base)s" % {'host':config["host"],'base':config["base"] } )
