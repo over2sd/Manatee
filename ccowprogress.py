@@ -6,17 +6,20 @@ or an HTML page listing some of the unassigned categories.
 """
 from __future__ import print_function
 
-BUILD = "006"
+BUILD = "021"
 
 import sys
 from PIL import (Image, ImageDraw)
 from jinja2 import (Environment, FileSystemLoader)
-import glob, os
+import glob, os, shutil
 import codecs
 from ccowsql import (create_engine)
+import math
+from datetime import (date,time,datetime)
 
 SKRED = "#770000"
 SKGRN = "#22ff22"
+SKYEL = "#cccc00"
 
 MAXMISS = 9999
 L3W = 6
@@ -25,6 +28,8 @@ L1W = 106
 L4O = 3
 L3O = 2
 L2O = 1
+
+imgsize = 424, 424
 
 # Function: pull all values from the <lang> string table into a single dict.
 def dictpop(lang = "en"): # Should always be "en"
@@ -53,11 +58,10 @@ def dictpop(lang = "en"): # Should always be "en"
       exit(3)
   # TODO: Any strings from the config file that might be displayed or passed into the SQL server need to be validated here.
   dict = {}
-# create a connection
   # Create connection to SQL server (currently MySQL)
   engine = create_engine("%(host)s/%(base)s" % {'host':config["host"],'base':config["base"] } )
   sqlconn = engine.connect()
-# send the query to grab all rows from the categories_en table
+  # send the query to grab all rows from the categories_en table
   cmd = "SHOW TABLES LIKE 'categories_" + lang + "';"
   result = sqlconn.execute(cmd)
   if result.rowcount:
@@ -65,6 +69,7 @@ def dictpop(lang = "en"): # Should always be "en"
     result = sqlconn.execute(cmd)
     if result.rowcount:
       for row in result:
+        # for each row, set dict['ccode'] = 'ctext'[:5]
         code = row['ccode']
         code = code.replace('o','x')
         dict[code] = row['ctext'][:5] # We don't need to store the whole text, just enough to check for [Un...
@@ -72,8 +77,7 @@ def dictpop(lang = "en"): # Should always be "en"
     print("Language not found!")
     sqlconn.close()
     exit(4)
-# for each row, set dict['ccode'] = 'ctext'[:5]
-# Oh, and do error checking along the way.
+# Oh, and do error checking along the way. (TODO)
   sqlconn.close()
   return dict
 
@@ -98,7 +102,80 @@ def isAssigned(code,dict):
 
 # Function: Create the progress image.
 
+def unhex(c):
+  """Given a hex character, returns the decimal value in an integer."""
+  c = c[:1]
+  if "abcdefABCDEF0123456789".find(c) != -1:
+    return int(c,16)
+  else:
+    return 0
+
 # Function: take the ccode and return a tuple ((x,y),width) where that pixel/box goes, and how wide a box should be.
+def codeLoc(code):
+  """Given a code, this function returns a tuple containing a tuple
+  of the x,y coordinates that belong to the code, and its width by
+  stage level. The draw function will use these to determine where
+  and how big to draw the box for that code.
+  """
+  stage = code.find('x')
+  if stage == -1: stage = 4 # No x in code, must be 4th stage.
+  width = [L1W - 1,L2W - 1,L3W - 1,0]
+  xs = [0,0,0,0]
+  ys = [0,0,0,0]
+  if stage > 0:
+    a = unhex(code[0])
+    xs[0] = (a % 4) * L1W
+    ys[0] = int(math.floor(a/4) * L1W)
+    if stage > 1:
+      a = unhex(code[1])
+      xs[1] = (a % 4) * L2W
+      ys[1] = int(math.floor(a/4) * L2W)
+      if stage > 2:
+        a = unhex(code[2])
+        xs[2] = (a % 4) * L3W
+        ys[2] = int(math.floor(a/4) * L3W)
+        if stage > 3:
+          a = unhex(code[3])
+          xs[3] = (a % 4)
+          ys[3] = int(math.floor(a/4))
+  offset = [0,0,L2O,L3O,L4O]
+  stage = offset[stage]
+  x = int(sum(xs) + stage)
+  y = int(sum(ys) + stage)
+  return ((x,y),width[stage])
+
+def timeStamper():
+  """Returns a timestamp string suitable for use in filenames."""
+  t = datetime.utcnow()
+  s = "{0:%y%m%d-%H%M}".format(t) # Running this progress report more than once a minute is porbably excessive.
+  return s
+
+def buildPNG(codes):
+  """Given a dict of codes, builds a PNG image representing the progress
+  of assigning categories. Returns the number of categories described as
+  [Reserved]. (int)
+  """
+  numres = 0
+  png = Image.new("RGBA",imgsize,SKRED)
+  draw = ImageDraw.Draw(png)
+  i = 0
+  for c in codes:
+    if (i % 50) == 0: print(".",end = '')
+    color = SKGRN
+    if codes[c].find("[R") == 0:
+      color = SKYEL
+      numres += 1
+    t = codeLoc(c)
+    a = t[0]
+    if t[1] == 0:
+      draw.point(a,color)
+    else:
+      b = (t[0][0] + t[1],t[0][1] + t[1])
+      draw.rectangle([a,b], outline = color)
+    i += 1
+  del draw
+  png.save("temp.png","PNG")
+  return numres
 
 def codeparent(code):
   """Given a CCOW code, returns its parent code."""
@@ -180,14 +257,41 @@ def main(): # The main event
     exit(1)
   if sys.argv[1] == 'p': # if progress, create the new progress png
     print("Progress..", end='')
+    here = os.path.dirname(os.path.abspath(__file__))
+    env = Environment(loader=FileSystemLoader(here))
+    template = env.get_template('progress.jtl')
+    var = {}
+    var['build'] = BUILD
  # push the SQL database into a dict
     codes = dictpop()
  # cycle through the dict, writing pixels to the new image
+    reserved = buildPNG(codes)
+    var['res'] = reserved
+    x = 69904.00 # 16^4 + 16^3 + 16^2 + 16
+#    print(len(codes))
+    x = round(len(codes) / x,7)
+    var['pcdone'] = x * 100 # To make the percentage display a percentage, not a decimal
+    var['ts'] = "{0:%H:%M:%Sh (UTC) on %b %d, %Y}".format(datetime.utcnow())
  # save the new image to a timestamp-containing filename
+    ts = timeStamper()
+    try:
+      os.rename("temp.png","progress" + ts + ".png")
  # move the old one to a filename preserving its original timestamp / rely on the old image already being saved in a timestamped filename?
  # point progress-old.png symlink at the old progress image, or copy the old new image to that name
+      old = "progress.png"
+      older = "progress-old.png"
+      if os.path.exists(older):
+        os.remove(older)
+      if os.path.exists(old):
+        os.rename(old,older)
  # point progress.png symlink to new image, or copy new image to that name
+      shutil.copy("progress" + ts + ".png",old)
  # write a new progress.htm
+      with codecs.open("progress.htm",'wU',"UTF-8") as f:
+        f.write(template.render({"var": var}).encode("utf-8"))
+        f.close()
+    except Exception as e:
+      print("An error occurred attempting to process files: %s" % e)
  # all done, right?
 
   elif sys.argv[1] == 'm': # elif missing, create a new missing.htm
@@ -196,6 +300,7 @@ def main(): # The main event
     env = Environment(loader=FileSystemLoader(here))
     template = env.get_template('missing.jtl')
     var = {}
+    var['build'] = BUILD
  # push the SQL database into a dict
     codes = dictpop()
     var['codes'] = listMissing(codes)
@@ -211,6 +316,7 @@ def main(): # The main event
 
   else:
     print("Valid parameters are: \"" + sys.argv[0] + " m\" for missing or \"" + sys.argv[0] + " p\" for progress. Please run again with a valid parameter.")
+  print(".")
 
 
 # Standard boilerplate to call the main()

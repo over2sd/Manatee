@@ -6,7 +6,7 @@
 import sys
 import os
 from ccowsql import unsql
-from ccowcgi import (hexchar, cleanCode)
+from ccowcgi import (hexchar, cleanCode, unhexchar)
 MYNAME = os.path.basename(sys.argv[0])
 
 import svalues

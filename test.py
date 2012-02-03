@@ -1,6 +1,6 @@
 #!/usr/bin/python -tt
 
-# import ccowprogress
+from ccowprogress import (codeLoc, SKRED, SKGRN, SKYEL, L3W, L2W, L1W, L4O, L3O, L2O, timeStamper)
 from PIL import (Image, ImageDraw)
 import glob, os
 from cgi import escape
@@ -14,21 +14,55 @@ def main():
     exit(0)
   else:
     print "Run from command line. All okay."
+  print timeStamper()
 
 #  print "Content-type: text/html\n\n"
-  for k in sorted(os.environ):
-    print " %s:\t\t%s \t\t<br />" %(escape(k), escape(os.environ[k]))
-
-"""
-  png = Image.new("RGBA",imgsize,ccowprogress.SKRED)
-#  png.putpixel((ccowprogress.L4O + 2,ccowprogress.L4O + 5),ccowprogress.SKGREEN)
+  """
+  l = ["0000","000x","00xx","0xxx","a102","ffff"]
+  for i in l:
+    t = codeLoc(i)
+    print t[0]
+  png = Image.new("RGBA",imgsize,SKRED)
   draw = ImageDraw.Draw(png)
-  draw.point((ccowprogress.L4O + 2,ccowprogress.L4O + 5),ccowprogress.SKGRN)
-  draw.rectangle([(200,200),(ccowprogress.L3W + 200,ccowprogress.L3W + 200)], outline = ccowprogress.SKGRN)
+  l = ["0","5","a","f"]
+  c = SKYEL
+  t = codeLoc("fa50")
+  draw.point(t[0],c)
+  c = SKGRN
+  t = codeLoc("ffff")
+  draw.point(t[0],c)
+  print(">")
+  c = SKGRN
+  for i in l:
+    x = "000" + i
+    t = codeLoc(x)
+    draw.point(t[0],c)
+  c = SKYEL
+  for i in l:
+    x = "00" + i + "x"
+    t = codeLoc(x)
+#    print(t[1])
+    a = t[0]
+    b = (t[0][0] + t[1],t[0][1] + t[1])
+    draw.rectangle([a,b], outline = c)
+  c = SKGRN
+  for i in l:
+    x = "0" + i + "xx"
+    t = codeLoc(x)
+    a = t[0]
+    b = (t[0][0] + t[1],t[0][1] + t[1])
+    draw.rectangle([a,b], outline = c)
+  c = SKYEL
+  for i in l:
+    x = i + "xxx"
+    t = codeLoc(x)
+    a = t[0]
+    b = (t[0][0] + t[1],t[0][1] + t[1])
+    draw.rectangle([a,b], outline = c)
   del draw
   png.save("test.png","PNG")
+# """
   exit(0)
-"""
 
 # Standard boilerplate to call the main()
 if __name__ == '__main__':

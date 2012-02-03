@@ -7,6 +7,11 @@
 </head>
 <body>
 	<p>Return to <a href="ccowhelp.py">CCOW helper</a></p>
-...
+	<p>The following is the progress of the English tables when the last progress report was run at {{ var['ts'] }}:</p>
+	<div class="oldstat">Previous Progress<img src="progress-old.png" alt="Graphic showing progress as a collection of pixels representing assigned and unassigned sections." /></div>
+	<div class="newstat">Latest Progress<img src="progress.png" alt="Graphic showing progress as a collection of pixels representing assigned and unassigned sections." /></div>
+	<p class=" clearit">Progress: {{ var['pcdone'] }}% with {{ var['res'] }} reserved categories.</p>
+	<p>See <a href="missing.htm">missing categories</a></p>
+  <p>Build #{{ var['build'] }}</p>
 </body>
 </html>

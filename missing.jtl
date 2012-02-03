@@ -11,6 +11,7 @@
 		<div class="misscont2"><p class="misscont1">{% for miss in var['codes'] %}
 		<a href="ccowhelp.py?lang=en&cowc={{ miss[1] }}">{{ miss[2] }}</a>
 {% if miss[0] is divisibleby 10 %}</p>{% if miss[0] is divisibleby 100 %}</div><div class="misscont2"><p class="misscont1">{% else %}<p class="misscont1">{% endif %}{% endif %}{% endfor %}</p></div>
-
+	<p>See <a href="progress.htm">progress diagrams</a></p>
+  <p>Build #{{ var['build'] }}</p>
 </body>
 </html>
