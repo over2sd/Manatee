@@ -7,8 +7,8 @@ from jinja2 import (Environment, FileSystemLoader)
 from ccowi18n import (glot, glotCrumbs, glotCrumbs, glotSubs)
 from ccowcgi import (cgi, loadConfig, cleanCode, chooseStyle, getStage, formClean)
 from ccowsql import (create_engine)
-from flask import (Flask, render_template, request)
-app = Flask(__name__)
+from flask import (Flask, render_template, request, url_for)
+app = Flask(__name__,instance_relative_config=True)
 
 import sys
 import os
@@ -26,8 +26,14 @@ def suggest():
 #  query = cgi.FieldStorage()
   lang = request.values.get("lang","en")[:2]
   var['lang'] = lang
-  code = request.values.get("scod","XXXX")
-  var['scod'] = str(cleanCode(code)).lower()
+  code = request.values.get("scod",None)
+  if code:
+    var['scod'] = str(cleanCode(code)).lower()
+  else:
+    var['showerr'] = True
+    var['showform'] = False
+    var['scod'] = "----"
+    var['error'] = "You must provide a code. Please try again."
   desc = request.values.get("sdesc","[Suggestion]")
   var['sdesc'] = formClean(desc)
   rationale = request.values.get("srat","[Rationale]")
@@ -54,8 +60,8 @@ def suggest():
   # if it's all good, insert a row into the suggestions table
   # if bad input, display form
 # """
-  var['config'] = config
-  return render_template("suggest.jtl", var=var)
+  config['logo'] = "img/manateelogo.png"
+  return render_template("suggest.jtl", config=config, var=var)
 
 if __name__ == '__main__':
   app.debug = True
