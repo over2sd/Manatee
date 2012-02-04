@@ -6,6 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="main.css" />
 </head>
 <body>
+{% if config['logo'] %}<div class="logo"><img src="img/{{ config['logo'] }}" alt="{{ config['logodesc'] }}" title="{{ config['logodesc'] }}" /></div>{% endif %}
 	<p>Return to <a href="ccowhelp.py">CCOW helper</a></p>
 	<p>The following is the progress of the English tables when the last progress report was run at {{ var['ts'] }}:</p>
 	<div class="oldstat">Previous Progress<img src="progress-old.png" alt="Graphic showing progress as a collection of pixels representing assigned and unassigned sections." /></div>

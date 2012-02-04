@@ -1,9 +1,14 @@
+2012-02-03:
+- Added logo support to templates
+- Built suggestion form. That took entirely ten times as long as it should have.
+
 2012-02-02:
 - Added an updated explanation of the project
 - Built second half of ccowprogress.py
 - Fixed an import error in ccowi18n.py
 - Moved config loading to ccowcgi.py in its own function
 - Began work on Suggestion module
+- Made some minor changes to the public page CSS
 
 2012-02-01:
 - Closed a file left open in ccowhelp.py

@@ -6,6 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="main.css" />
 </head>
 <body>
+{% if config['logo'] %}<div class="logo"><img src="img/{{ config['logo'] }}" alt="{{ config['logodesc'] }}" title="{{ config['logodesc'] }}" /></div>{% endif %}
 	<p>Return to <a href="ccowhelp.py">CCOW helper</a></p>
 	<p>The following sections were missing when the last progress report was run at {{ var['time'] }}:</p>
 		<div class="misscont2"><p class="misscont1">{% for miss in var['codes'] %}

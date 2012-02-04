@@ -41,4 +41,6 @@ table.progress tr td p { background-color: #fff; color: #fff; padding: 2px; marg
 .newstat { margin: 5px; padding: 0px; float: left; border: 3px inset #b0b0cc; text-align: center; }
 .oldstat { margin: 5px; padding: 0px; float: left; border: 3px inset #4040ff; text-align: center; }
 .newstat img, .oldstat img { display: block; margin: 0; padding: 0; }
-
+.logo { float: right; }
+.logo img { border: 0px; }
+.errtext { color: #600; background-color: #ffc; text-align: center; }

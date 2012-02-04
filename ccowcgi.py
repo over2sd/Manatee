@@ -61,6 +61,14 @@ def hexchar(i):
   else:
     return None
 
+def formClean(s):
+  """Given a string, replaces double-quotes and other troublesome
+  characters so the string can be used in a form.
+  """
+  s = s.replace('"',"'")
+  s = s.replace("\n"," ")
+  return s
+
 def loadConfig():
   """Returns a dict containing the config options in the CCOW config file."""
   lines = []

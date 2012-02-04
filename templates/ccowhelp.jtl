@@ -7,13 +7,11 @@
 	<link rel="stylesheet" type="text/css" href="{{ var['custom'] }}.css" />{% endif %}
 {% endblock %}</head>
 <body>
-		{% if var['crumbs'] %}
-		<ul class="loaf" id="breadtrail">
-			{% for crumb in var['crumbs'] %}
-			<li class="crumb" id="sm0{{ crumb[0] }}"><a href="{{ crumb[1] }}{% if var['style'] %}{% if var['crumbdiv'] %}&{% else %}?{% endif %}{{ var['style'] }}{% endif %}">{{ crumb[2]|e }}</a>{% if var['crumbdiv'] %} &gt;{% endif %}</li>
-			{% endfor %}
-		</ul>
-		{% endif %}
+{% if config['logo'] %}<div class="logo"><img src="img/{{ config['logo'] }}" alt="{{ config['logodesc'] }}" title="{{ config['logodesc'] }}" /></div>{% endif %}
+{% if var['crumbs'] %}		<ul class="loaf" id="breadtrail">
+{% for crumb in var['crumbs'] %}			<li class="crumb" id="sm0{{ crumb[0] }}"><a href="{{ crumb[1] }}{% if var['style'] %}{% if var['crumbdiv'] %}&{% else %}?{% endif %}{{ var['style'] }}{% endif %}">{{ crumb[2]|e }}</a>{% if var['crumbdiv'] %} &gt;{% endif %}
+			</li>{% endfor %}
+		</ul>{% endif %}
 		<p class="clearit"> </p>
 		{% if var['code'] %}
 			{% if var['expl'] %}

@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3c.org/1999/xhtml" lang="EN">
-<head>
-	<title>Manatee: Suggest a Category</title>
-	<link rel="stylesheet" type="text/css" href="main.css" />
-</head>
+<head>{% block head %}
+	<title>{% block title %}{{ var['config']['site'] }}: {{ var['title'] }}{% endblock %}</title>
+	<link rel="stylesheet" type="text/css" href="main.css" />{% if var['custom'] %}
+	<link rel="stylesheet" type="text/css" href="{{ var['custom'] }}" />{% endif %}
+	<link rel="icon" type="image/png" href="/ccow/img/favicon.png" />{% endblock %}</head>
 <body>
-	<p>Return to <a href="ccowhelp.py">CCOW helper</a></p>
+{% if var['config']['logo'] %}<div class="logo"><img src="../img/{{ var['config']['logo'] }}" alt="{{ var['config']['logodesc'] }}" title="{{ var['config']['logodesc'] }}" /></div>{% endif %}
+	<p>Return to <a href="ccowhelp.py">CCOW helper</a></p>{% if var['showform'] %}
+	<form name="suggest" method="post" action="suggest">
+		Code: <input type="text" name="scod" size="4" value="{{ var['scod'] }}" /><br />
+		Description: <input type="text" name="sdesc" size="75%" value="{{ var['sdesc'] }}" /><br />
+		Rationale: <input type="text" name="srat" size="75%" value="{{ var ['srat'] }}" /><br />
+		<input type="hidden" name="lang" value="{{ var['lang'] }}" />
+		<input type="hidden" name="style" value="{{ var['style'] }}" />
+		<input type="submit"  value="Suggest" />
+	</form>{% else %}<p>You entered: {{ var['scod'] }}: {{ var['sdesc'] }} - {{ var['srat'] }}</p>{% endif %}{% if var['suggested'] %}
+	Current suggestions for {{ var['scod'] }}:{% for d in var['suggested'] %}
+		<p>{{ d|e }}</p>
+{% endfor %}{% endif %}
+
 Nothing to see, yet.
-  <p>Build #{{ var['build'] }}</p>
+{% if var['showerr'] %}	<p class="errtext">{{ var['error'] }}</p>
+{% endif %}  <p>Build #{{ var['build'] }}</p>
 </body>
 </html>
