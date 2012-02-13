@@ -15,6 +15,10 @@
 The next step in the project is to build the suggestion form module.
 <h2>Changes</h2>
 <pre>
+2012-02-13:
+- moved static pages into their own directory to make Flask happy.
+- loadConfig() now builds absolute path onto config filename.
+
 2012-02-03:
 - Added logo support to templates
 - Built suggestion form. That took entirely ten times as long as it should have.
@@ -26,6 +30,11 @@ The next step in the project is to build the suggestion form module.
 - Moved config loading to ccowcgi.py in its own function
 - Began work on Suggestion module
 - Made some minor changes to the public page CSS
+
+2012-02-01:
+- Closed a file left open in ccowhelp.py
+- Started fleshing out ccowprogress.py
+- Started building missing.jtl and progress.jtl
 </pre>
 <h2>Roadmap</h2>
 <div class="stage done">Stage 1 - A helper program that allows users to locate the appropriate
