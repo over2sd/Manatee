@@ -69,12 +69,15 @@ def formClean(s):
   s = s.replace("\n"," ")
   return s
 
+from os import path
 def loadConfig():
   """Returns a dict containing the config options in the CCOW config file."""
   lines = []
   config = {}
+  here = path.dirname(__file__)
+  fn = path.join(here,'manatee.conf')
   try:
-    with codecs.open('manatee.conf','rU','utf-8') as conf:
+    with codecs.open(fn,'rU','utf-8') as conf:
       lines = conf.readlines()
       conf.close()
   except IOError as e:

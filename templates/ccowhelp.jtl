@@ -3,8 +3,8 @@
 <html xmlns="http://www.w3c.org/1999/xhtml" lang="EN">
 <head>{% block head %}
 	<title>{% block title %}{{ config['site'] }}: {{ var['title'] }}{% endblock %}</title>
-	<link rel="stylesheet" type="text/css" href="main.css" />{% if var['custom'] %}
-	<link rel="stylesheet" type="text/css" href="{{ var['custom'] }}.css" />{% endif %}
+	<link rel="stylesheet" type="text/css" href="static/main.css" />{% if var['custom'] %}
+	<link rel="stylesheet" type="text/css" href="static/{{ var['custom'] }}.css" />{% endif %}
 {% endblock %}</head>
 <body>
 {% if config['logo'] %}<div class="logo"><img src="img/{{ config['logo'] }}" alt="{{ config['logodesc'] }}" title="{{ config['logodesc'] }}" /></div>{% endif %}

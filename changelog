@@ -1,3 +1,7 @@
+2012-02-13:
+- moved static pages into their own directory to make Flask happy.
+- loadConfig() now builds absolute path onto config filename.
+
 2012-02-03:
 - Added logo support to templates
 - Built suggestion form. That took entirely ten times as long as it should have.

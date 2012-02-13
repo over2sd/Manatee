@@ -17,8 +17,6 @@ MYNAME = os.path.basename(sys.argv[0])
 
 @app.route('/suggest', methods=['GET', 'POST'])
 def suggest():
-  print "Content-Type: text/html\n\n",
-
   config = loadConfig()
   var = {}
   var['build'] = BUILD
@@ -60,7 +58,6 @@ def suggest():
   # if it's all good, insert a row into the suggestions table
   # if bad input, display form
 # """
-  config['logo'] = "img/manateelogo.png"
   return render_template("suggest.jtl", config=config, var=var)
 
 if __name__ == '__main__':

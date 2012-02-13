@@ -3,11 +3,11 @@
 <html xmlns="http://www.w3c.org/1999/xhtml" lang="EN">
 <head>{% block head %}
 	<title>{% block title %}{{ config['site'] }}: {{ var['title'] }}{% endblock %}</title>
-	<link rel="stylesheet" type="text/css" href="main.css" />{% if var['custom'] %}
-	<link rel="stylesheet" type="text/css" href="{{ var['custom'] }}" />{% endif %}
+	<link rel="stylesheet" type="text/css" href="static/main.css" />{% if var['custom'] %}
+	<link rel="stylesheet" type="text/css" href="static/{{ var['custom'] }}" />{% endif %}
 	<link rel="icon" type="image/png" href="/ccow/img/favicon.png" />{% endblock %}</head>
 <body>
-{% if config['logo'] %}<div class="logo"><img src="../img/{{ config['logo'] }}" alt="{{ config['logodesc'] }}" title="{{ config['logodesc'] }}" /></div>{% endif %}
+{% if config['logo'] %}<div class="logo"><img src="img/{{ config['logo'] }}" alt="{{ config['logodesc'] }}" title="{{ config['logodesc'] }}" /></div>{% endif %}
 	<p>Return to <a href="ccowhelp.py">CCOW helper</a></p>{% if var['showform'] %}
 	<form name="suggest" method="post" action="suggest">
 		Code: <input type="text" name="scod" size="4" value="{{ var['scod'] }}" /><br />
@@ -21,7 +21,7 @@
 		<p>{{ d|e }}</p>
 {% endfor %}{% endif %}
 
-Nothing to see, yet.
+Nothing to see, yet. {{ config['host'] }}
 {% if var['showerr'] %}	<p class="errtext">{{ var['error'] }}</p>
 {% endif %}  <p>Build #{{ var['build'] }}</p>
 </body>
