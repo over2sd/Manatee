@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<%args>
+$lang => ''
+$code => 'XXXX'
+$style => ''
+</%args>
+<%perl>
+my %config = (
+	'host' => 'localhost',
+	'base' => 'ccow',
+	'site' => 'Manatee',
+	'logo' => 'manateelogo.png',
+	'logodesc' => 'Logo: drawing of a sea cow.'
+);
+</%perl>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3c.org/1999/xhtml" lang="EN">
+<head>
+	<title><% $config{site} %>: % var['title'] %></title>
+	<link rel="stylesheet" type="text/css" href="static/main.css" />
+</head>
+<body>
+<& dbpull.comp, 'lang'=>$lang, 'host'=>$config{host}, 'base'=>$config{base} &>
+Lorem Ipsum
+</body>
+</html>

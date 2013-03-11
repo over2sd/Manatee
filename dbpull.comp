@@ -1,0 +1,31 @@
+<!-- dbpull.comp -->
+<%args>
+$lang
+$base => 'ccow'
+$host => 'localhost'
+</%args>
+<%once>
+my $password = '';
+my $username = 'www-data';
+use DBI;
+my $dbh;    # Declare $dbh only once
+</%once>
+<%init>
+# connect to the database
+$dbh = DBI->connect("DBI:mysql:$base:$host",
+                 $username, $password) ||
+die qq{DBI error from connect: "$DBI::errstr"};
+</%init>
+<%perl>
+my $query = qq{SELECT * FROM categories_$lang LIMIT 16};
+my $realq = $dbh->prepare($query);
+$realq->execute();
+</%perl>
+
+<table style="border: outset; padding: 2px;">
+%	while (my $row = $realq->fetchrow_hashref()) {
+	<tr style="margin: 1px; padding: 1px;">
+		<td style="border: inset; padding: 3px;"><% $row->{ccode} %></td><td style="border: inset; padding: 3px;"><% $row->{ctext} %></td>
+	</tr>
+%	}
+</table>
