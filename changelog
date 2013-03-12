@@ -1,3 +1,9 @@
+2013-03-11:
+- Continued porting python frontend to perl.
+
+2013-03-10:
+- Started work on perl frontend.
+
 2012-02-13:
 - moved static pages into their own directory to make Flask happy.
 - loadConfig() now builds absolute path onto config filename.

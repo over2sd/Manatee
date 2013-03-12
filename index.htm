@@ -5,22 +5,136 @@ $code => 'XXXX'
 $style => ''
 </%args>
 <%perl>
+sub chooseStyle {
+	my ($in) = @_;
+	$in = substr($in,0,3);
+	my %styledict = (
+		'alt' => 'alpha'
+	);
+	my $out = '';
+	if (length($styledict{$in})){
+		$out = $styledict{$in};
+	}
+	return $out;
+}
+sub getStage{
+	my ($code) = @_;
+	my $loc = index($code,'x');
+	if($loc gt 0){ $loc = 4; }
+	if($code == "XXXX"){ $loc = 0; }
+	return $loc;
+}
+# my $manatee = $m->fetch_comp('manatee.mp');
+$style = substr($style,0,3);
 my %config = (
 	'host' => 'localhost',
 	'base' => 'ccow',
 	'site' => 'Manatee',
 	'logo' => 'manateelogo.png',
-	'logodesc' => 'Logo: drawing of a sea cow.'
+	'logodesc' => 'Logo: drawing of a sea cow.',
+	'custom' => chooseStyle($style)
 );
+my %var = (
+	'title' => 'Default'
+);
+if (length($style)){ $var{style} = "style=$style"; }
+if (length($lang) == 0){
+	$var{title} = "Select Language";
+} else {
+	$var{title} = $code;
+	$var{dosnip} = 1;
+	$var{showsubs} = 0;
+	$var{stage} = getStage($code);
+	$var{cat00} = substr($code,0,$var{stage})
+}
 </%perl>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3c.org/1999/xhtml" lang="EN">
 <head>
-	<title><% $config{site} %>: % var['title'] %></title>
+	<title><% $config{site} %>: <% $var{title} %></title>
 	<link rel="stylesheet" type="text/css" href="static/main.css" />
+% if(length($config{custom})){
+	<link rel="stylesheet" type="text/css" href="static/<% $config{custom} %>.css" />
+%}
 </head>
 <body>
+% if(length($config{logo})){
+	<div class="logo"><img src="img/<% $config{logo} %>" alt="<% $config{logodesc} %>" title="<% $config{logodesc} %>" /></div>
+% }
+
+
+% if(length($lang)){
+
+
+{% if var['crumbs'] %}		<ul class="loaf" id="breadtrail">
+{% for crumb in var['crumbs'] %}			<li class="crumb" id="sm0{{ crumb[0] }}"><a href="{{ crumb[1] }}{% if var['style'] %}{% if var['crumbdiv'] %}&{% else %}?{% endif %}{{ var['style'] }}{% endif %}">{{ crumb[2]|e }}</a>{% if var['crumbdiv'] %} &gt;{% endif %}
+			</li>{% endfor %}
+		</ul>{% endif %}
+		<p class="clearit"> </p>
+		{% if var['code'] %}
+			{% if var['expl'] %}
+		<h1 id="sm17">{{ var['catname'] }}</h1>
+		<div class="content" id="sm18">
+			<div class="menu" id="sm16">
+			{% else %}
+		<h1 id="sm11">#{{ var['cattrim'] }}: {{ var['catname']|e }}</h1>
+		<div class="content" id="sm12">
+			<div class="menu" id="sm14" style="border-color: #{{ var['border'] }};">
+			{% endif %}
+			{% include var['catinf'] ignore missing %}
+			{{ var['noinf'] }}{% if var['suggsubs'] %}You can help fill out this category. Visit <a href="{{ var['sugurl'] }}?lang={{ var['lang'] }}&cowc={{ var['code'] }}{% if var['style'] %}&{{ var['style'] }}{% endif %}">{{ var['code'] }} Divisions</a> to help.{% endif %}
+				{% if var['cattrim'] %}
+			<p class="note" id="sm01">If you are searching for {{ var['catname']|e }}, add <strong>cowc:#{{ var['cattrim'] }}</strong> to your search criteria.</p>
+				{% endif %}
+				{% if var['dosnip'] %}{% if var['catmul'] %}
+			<p class="sugg" id="sm03">If the site/work covers multiple categories, its category might be  <a href="{{ var['uri'] }}?lang={{ var['lang'] }}&cowc={{ var['catmul'] }}{% if var['style'] %}&{{ var['style'] }}{% endif %}"> #{{ var['catmul'] }}: {{ var['muldesc']|e }}</a>, and the code to designate it as such would be <strong>&lt;meta name="cowc" content="#{{ var['catmul'] }}" /&gt;</strong>.</p>
+				{% else %}
+			<p class="note" id="sm13">The snippet for this category is: <strong>&lt;meta name="cowc" content="#{{ var['code'] }}" /&gt;</strong></p>
+				{% endif %}
+			<p class="note" id="sm02">You can add this snippet to your HTML's head section to enable search engines that use CCOW to categorize your site.</p>{% endif %}
+			{% if var['subcats'] %}
+				<p class="drill" id="sm15">If this is not correct, choose a more specific category from the list below:</p> 
+				<p class="clearit"> </p>
+				{% for subcat in var['subcats'] %}
+				<p class="subcat"><a href="{{ var['uri'] }}?lang={{ var['lang'] }}&cowc={{ subcat[0] }}{% if var['style'] %}&{{ var['style'] }}{% endif %}">{{ subcat[1] }}: {{ subcat[2]|e }}</a></p>
+				{% endfor %}
+			{% endif %}
+			<p class="clearit"> </p>
+			</div>
+		</div>
+% } else {
+		<h1 id="sm10"><% $var{title} %></h1>
+		<div class="languages">
+			<p class="lingua"><a href="?lang=en
+% if(length($var{style})){
+&<% $var{style} %>
+% }
+">Language: English</a></p>
+			<p class="lingua"><a href="?lang=es
+% if(length($var{style})){
+&<% $var{style} %>
+% }
+">Idioma: Español</a></p>
+		</div>
+% }
+	<a href="progress.htm"><% $var{progress} %></a>
+	<p class="clearit">Don't know what these categories mean? Check out <a href="ccowhelp.py?lang=en&cowc=yxxx
+% if(length($var{style})){
+&<% $var{style} %>
+% }
+">Category Explanation</a>
+	<p class="clearit"> </p>
+
+	<div class="cc" id="sm11">This helper application is released under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike</a> license.
+	<p>The contents of the translation and description files are released under a <a href="http://creativecommons.org/licenses/by-nd/3.0/">CC Attribution-No Derivative Works</a> license.</p> (C) copyright 2009-2013 by the Manatee Project Workgroup.</div>
+	<p class="source" id="sm12">You can obtain the source for this program at http://nowhere.yet</p>
 <& dbpull.comp, 'lang'=>$lang, 'host'=>$config{host}, 'base'=>$config{base} &>
 Lorem Ipsum
+<p class="subcat">This is a test subclass 1</p>
+<p class="subcat">This is a test subclass 2</p>
+<p class="subcat">This is a test subclass 3</p>
 </body>
+% print %var;
+% print %config;
+Done through ccowhelp.py:52
 </html>
