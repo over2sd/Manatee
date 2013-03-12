@@ -1,23 +1,11 @@
 <!-- dbpull.comp -->
 <%args>
 $lang
-$base => 'ccow'
-$host => 'localhost'
+$dbh
 $code => ''
 </%args>
-<%once>
-my $password = '';
-my $username = 'www-data';
-use DBI;
-my $dbh;    # Declare $dbh only once
-</%once>
-<%init>
-# connect to the database
-$dbh = DBI->connect("DBI:mysql:$base:$host",
-                 $username, $password) ||
-die qq{DBI error from connect: "$DBI::errstr"};
-</%init>
 <%perl>
+use DBI;
 my $query = qq{SELECT * FROM categories_$lang WHERE ccode=$code LIMIT 1};
 my $realq = $dbh->prepare($query);
 $realq->execute();
