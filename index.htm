@@ -6,8 +6,8 @@ $style => ''
 </%args>
 <%perl>
 use lib '/var/www/ccow-m';
-use Manatee;
 use ManateeSQL;
+use Manatee;
 $style = substr($style,0,3);
 my $dbh = &ManateeSQL::getDB();
 my %config = (
@@ -121,7 +121,8 @@ if (length($lang) == 0){
 	<div class="cc" id="sm11">This helper application is released under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike</a> license.
 	<p>The contents of the translation and description files are released under a <a href="http://creativecommons.org/licenses/by-nd/3.0/">CC Attribution-No Derivative Works</a> license.</p> (C) copyright 2009-2013 by the Manatee Project Workgroup.</div>
 	<p class="source" id="sm12">You can obtain the source for this program at http://nowhere.yet</p>
-<& dbpull.comp, 'lang'=>$lang, 'dbh'=>$dbh &>
+% ManateeSQL::glot($code,$dbh,$lang);
+<& dbpull.comp, 'lang'=>$lang, 'dbh'=>$dbh, 'code'=>$code &>
 Lorem Ipsum
 <p class="subcat">This is a test subclass 1</p>
 <p class="subcat">This is a test subclass 2</p>

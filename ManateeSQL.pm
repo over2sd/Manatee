@@ -2,7 +2,7 @@ package ManateeSQL;
 
 require Exporter;
 @ISA = qw(Exporter);
-@EXPORT = qw(getDB);
+@EXPORT = qw(getDB,glot);
 
 sub getDB {
 	my $host = 'localhost';
@@ -15,6 +15,12 @@ sub getDB {
 	$dbh = DBI->connect("DBI:mysql:$base:$host",$username, $password) ||
 		die qq{DBI error from connect: "$DBI::errstr"};
 	return $dbh;
+}
+
+sub glot {
+	my ($code,$sql,$lang) = @_;
+	my $stage = defined $_[0] ? shift : 5;
+	print "Code $code, SQL $sql, Language $lang, Stage $stage";
 }
 
 1;

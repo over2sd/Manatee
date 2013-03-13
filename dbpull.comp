@@ -6,15 +6,20 @@ $code => ''
 </%args>
 <%perl>
 use DBI;
-my $query = qq{SELECT * FROM categories_$lang WHERE ccode=$code LIMIT 1};
-my $realq = $dbh->prepare($query);
-$realq->execute();
+my $where = "";
+my $query = qq{SELECT ctext FROM categories_$lang WHERE ccode=\'$code\' LIMIT 1};
+print $query;
+my $realq = $dbh->selectrow_arrayref($query, { Slice => {} });
 </%perl>
 
+% if ($realq) {
 <table style="border: outset; padding: 2px;">
-%	while (my $row = $realq->fetchrow_hashref()) {
 	<tr style="margin: 1px; padding: 1px;">
-		<td style="border: inset; padding: 3px;"><% $row->{ccode} %></td><td style="border: inset; padding: 3px;"><% $row->{ctext} %></td>
+% foreach my $col (@{$realq}){
+		<td style="border: inset; padding: 3px;"><% $col %></td>
+% }
 	</tr>
-%	}
 </table>
+% } else {
+%	print "DB error: $DBI::errstr : $!\n";
+% }
