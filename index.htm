@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <%args>
 $lang => ''
-$code => 'XXXX'
+$cowc => 'XXXX'
 $style => ''
 </%args>
 <%perl>
 use lib '/var/www/ccow-m';
-use ManateeSQL;
 use Manatee;
+use ManateeSQL;
 $style = substr($style,0,3);
 my $dbh = &ManateeSQL::getDB();
 my %config = (
@@ -17,13 +17,16 @@ my %config = (
 	'custom' => &Manatee::chooseStyle($style)
 );
 my %var = (
-	'title' => 'Default'
+	'title' => 'Default',
+	'lang' => $lang
 );
 if (length($style)){ $var{style} = "style=$style"; }
 if (length($lang) == 0){
 	$var{title} = "Select Language";
 } else {
+	my $code = &Manatee::cleanCode($cowc);
 	$var{title} = $code;
+	$var{code} = $code;
 	$var{dosnip} = 1;
 	$var{showsubs} = 0;
 	$var{stage} = getStage($code);
@@ -37,7 +40,23 @@ if (length($lang) == 0){
 		while(length($var{catmul}) lt 4){
 			$var{catmul} = "${var{catmul}}0";
 		}
-#		$var{muldesc} = glot(cat00,sqlconn,lang,4)
+		$var{muldesc} = &ManateeSQL::glot($var{catmul},$dbh,$lang,4);
+		$var{catname} = &ManateeSQL::glot($var{code},$dbh,$lang,$var{stage});
+	}
+	$var{border} = substr($var{catmul},0,3);
+	if (substr($var{code},0,1) eq 'y') { # explanation key
+		$var{title} = "Explanation of categories";
+		if(substr($var{code},3,1) eq 'x') { # explain subcats
+			$var{expl} = 1;
+			$var{catname} = &ManateeSQL::glot("sxpl",$dbh,$lang);
+			$var{stage} = 3;
+		} else { # explain a single subcat
+			delete $var{catmul};
+			$var{cattrim} = "*" . substr($var{code},3,1);
+			$var{stage} = 4;
+			delete $var{dosnip};
+			$var{showsubs} = 0;
+		}
 	}
 }
 </%perl>
@@ -56,46 +75,57 @@ if (length($lang) == 0){
 % }
 
 
-% if(length($lang)){
-
-
-{% if var['crumbs'] %}		<ul class="loaf" id="breadtrail">
-{% for crumb in var['crumbs'] %}			<li class="crumb" id="sm0{{ crumb[0] }}"><a href="{{ crumb[1] }}{% if var['style'] %}{% if var['crumbdiv'] %}&{% else %}?{% endif %}{{ var['style'] }}{% endif %}">{{ crumb[2]|e }}</a>{% if var['crumbdiv'] %} &gt;{% endif %}
-			</li>{% endfor %}
-		</ul>{% endif %}
+% if (length($var{crumbs})) {
+		<ul class="loaf" id="breadtrail">
+% 	foreach($var{crumbs}){
+			<li class="crumb" id="sm0{{ crumb[0] }}"><a href="{{ crumb[1] }}{% if var['style'] %}{% if var['crumbdiv'] %}&{% else %}?{% endif %}{{ var['style'] }}{% endif %}">{{ crumb[2]|e }}</a>{% if var['crumbdiv'] %} &gt;{% endif %}
+			</li>
+% 	}
+		</ul>
+% }
 		<p class="clearit"> </p>
-		{% if var['code'] %}
-			{% if var['expl'] %}
-		<h1 id="sm17">{{ var['catname'] }}</h1>
+% if (length($var{code})) {
+% 	if (length($var{expl})) {
+		<h1 id="sm17"><% $var{catname} %></h1>
 		<div class="content" id="sm18">
 			<div class="menu" id="sm16">
-			{% else %}
-		<h1 id="sm11">#{{ var['cattrim'] }}: {{ var['catname']|e }}</h1>
+% 	} else {
+		<h1 id="sm11">#<% $var{cattrim} %>: <% $var{catname} %></h1>
 		<div class="content" id="sm12">
-			<div class="menu" id="sm14" style="border-color: #{{ var['border'] }};">
-			{% endif %}
-			{% include var['catinf'] ignore missing %}
-			{{ var['noinf'] }}{% if var['suggsubs'] %}You can help fill out this category. Visit <a href="{{ var['sugurl'] }}?lang={{ var['lang'] }}&cowc={{ var['code'] }}{% if var['style'] %}&{{ var['style'] }}{% endif %}">{{ var['code'] }} Divisions</a> to help.{% endif %}
-				{% if var['cattrim'] %}
-			<p class="note" id="sm01">If you are searching for {{ var['catname']|e }}, add <strong>cowc:#{{ var['cattrim'] }}</strong> to your search criteria.</p>
-				{% endif %}
-				{% if var['dosnip'] %}{% if var['catmul'] %}
-			<p class="sugg" id="sm03">If the site/work covers multiple categories, its category might be  <a href="{{ var['uri'] }}?lang={{ var['lang'] }}&cowc={{ var['catmul'] }}{% if var['style'] %}&{{ var['style'] }}{% endif %}"> #{{ var['catmul'] }}: {{ var['muldesc']|e }}</a>, and the code to designate it as such would be <strong>&lt;meta name="cowc" content="#{{ var['catmul'] }}" /&gt;</strong>.</p>
-				{% else %}
-			<p class="note" id="sm13">The snippet for this category is: <strong>&lt;meta name="cowc" content="#{{ var['code'] }}" /&gt;</strong></p>
-				{% endif %}
-			<p class="note" id="sm02">You can add this snippet to your HTML's head section to enable search engines that use CCOW to categorize your site.</p>{% endif %}
-			{% if var['subcats'] %}
-				<p class="drill" id="sm15">If this is not correct, choose a more specific category from the list below:</p> 
-				<p class="clearit"> </p>
-				{% for subcat in var['subcats'] %}
-				<p class="subcat"><a href="{{ var['uri'] }}?lang={{ var['lang'] }}&cowc={{ subcat[0] }}{% if var['style'] %}&{{ var['style'] }}{% endif %}">{{ subcat[1] }}: {{ subcat[2]|e }}</a></p>
-				{% endfor %}
-			{% endif %}
+			<div class="menu" id="sm14" style="border-color: #<% $var{border} %>;">
+% 	}
+% 	print $var{catinf};
+% 	print $var{noinf};
+% 	if (length($var{suggsubs})) {
+		You can help fill out this category. Visit <a href="{{ var['sugurl'] }}?lang={{ var['lang'] }}&cowc={{ var['code'] }}{% if var['style'] %}&{{ var['style'] }}{% endif %}">{{ var['code'] }} Divisions</a> to help.
+% 	}
+% 	if (length($var{cattrim})) {
+		<p class="note" id="sm01">If you are searching for <% $var{catname} %>, add <strong>cowc:#<% $var{cattrim} %></strong> to your search criteria.</p>
+% 	}
+% 	if ($var{dosnip} == 1) {
+% 		if (length($var{catmul})) {
+			<p class="sugg" id="sm03">If the site/work covers multiple categories, its category might be  <a href="?lang=<% $var{lang} %>&cowc=<% $var{catmul} %>
+% if (length($var{style})) {
+&<% $var{style} %>
+% }
+"> #<% $var{catmul} %>: <% $var{muldesc} %></a>, and the code to designate it as such would be <strong>&lt;meta name="cowc" content="#<% $var{catmul} %>" /&gt;</strong>.</p>
+% 		} else {
+			<p class="note" id="sm13">The snippet for this category is: <strong>&lt;meta name="cowc" content="#<% $var{code} %>" /&gt;</strong></p>
+% 		}
+		<p class="note" id="sm02">You can add this snippet to your HTML's head section to enable search engines that use CCOW to categorize your site.</p>
+% 	}
+% 	if (length($var{subcats})) {
+		<p class="drill" id="sm15">If this is not correct, choose a more specific category from the list below:</p> 
+		<p class="clearit"> </p>
+		{% for subcat in var['subcats'] %}
+			<p class="subcat"><a href="{{ var['uri'] }}?lang={{ var['lang'] }}&cowc={{ subcat[0] }}{% if var['style'] %}&{{ var['style'] }}{% endif %}">{{ subcat[1] }}: {{ subcat[2]|e }}</a></p>
+		{% endfor %}
+% 	}
 			<p class="clearit"> </p>
-			</div>
 		</div>
-% } else {
+	</div>
+% }
+% if (length($var{lang}) == 0) {
 		<h1 id="sm10"><% $var{title} %></h1>
 		<div class="languages">
 			<p class="lingua"><a href="?lang=en
@@ -111,7 +141,8 @@ if (length($lang) == 0){
 		</div>
 % }
 	<a href="progress.htm"><% $var{progress} %></a>
-	<p class="clearit">Don't know what these categories mean? Check out <a href="ccowhelp.py?lang=en&cowc=yxxx
+% my $t = length($lang) ? $lang : "en";
+	<p class="clearit">Don't know what these categories mean? Check out <a href="?lang=<% $t %>&cowc=yxxx
 % if(length($var{style})){
 &<% $var{style} %>
 % }
@@ -121,8 +152,8 @@ if (length($lang) == 0){
 	<div class="cc" id="sm11">This helper application is released under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike</a> license.
 	<p>The contents of the translation and description files are released under a <a href="http://creativecommons.org/licenses/by-nd/3.0/">CC Attribution-No Derivative Works</a> license.</p> (C) copyright 2009-2013 by the Manatee Project Workgroup.</div>
 	<p class="source" id="sm12">You can obtain the source for this program at http://nowhere.yet</p>
-% ManateeSQL::glot($code,$dbh,$lang);
-<& dbpull.comp, 'lang'=>$lang, 'dbh'=>$dbh, 'code'=>$code &>
+% ManateeSQL::glot($var{code},$dbh,$lang,1);
+<!-- & dbpull.comp, 'lang'=>$lang, 'dbh'=>$dbh, 'code'=>$code & -->
 Lorem Ipsum
 <p class="subcat">This is a test subclass 1</p>
 <p class="subcat">This is a test subclass 2</p>
@@ -130,5 +161,5 @@ Lorem Ipsum
 </body>
 % print %var;
 % print %config;
-Done through ccowhelp.py:59
+Done through ccowhelp.py:72./
 </html>
