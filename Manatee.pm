@@ -37,6 +37,7 @@ sub getStage{
 	my $loc = index($code,'x');
 	if($loc lt 0){ $loc = 4; }
 	if($code eq "XXXX"){ $loc = 0; }
+	if  (index($code,'y') == 1) { $loc = 3; }
 	return $loc;
 }
 

@@ -27,15 +27,17 @@ if (length($lang) == 0){
 	my $code = &Manatee::cleanCode($cowc);
 	$var{title} = $code;
 	$var{code} = $code;
+	$var{y} = (substr($var{code},0,1) eq 'y') ? 1 : 0;
 	$var{dosnip} = 1;
 	$var{showsubs} = 0;
 	$var{stage} = getStage($code);
 	$var{catmul} = substr($code,0,$var{stage});
 	$var{cattrim} = '';
+	$var{catinf} = "cats/$lang/$code";
 	if($var{stage} > 0){
 		$var{cattrim} = $var{catmul};
 	}
-	if($var{stage} lt 4){
+	if($var{stage} lt 4 and not $var{y}){
 		$var{showsubs} = 1;
 		while(length($var{catmul}) lt 4){
 			$var{catmul} = "${var{catmul}}0";
@@ -44,11 +46,12 @@ if (length($lang) == 0){
 		$var{catname} = &ManateeSQL::glot($var{code},$dbh,$lang,$var{stage});
 	}
 	$var{border} = substr($var{catmul},0,3);
-	if (substr($var{code},0,1) eq 'y') { # explanation key
+	if ($var{y}) { # explanation key
+		$var{border} = "00" . substr($var{code},3,1);
 		$var{title} = "Explanation of categories";
-		if(substr($var{code},3,1) eq 'x') { # explain subcats
+		if(substr($var{code},3,1) eq 'x' ) { # explain subcats
 			$var{expl} = 1;
-			$var{catname} = &ManateeSQL::glot("sxpl",$dbh,$lang);
+			$var{catname} = $var{title};
 			$var{stage} = 3;
 		} else { # explain a single subcat
 			delete $var{catmul};
@@ -56,8 +59,13 @@ if (length($lang) == 0){
 			$var{stage} = 4;
 			delete $var{dosnip};
 			$var{showsubs} = 0;
+			my @aspect = ("Hol","Ras","Dua","Chi","Ter","Fum","Sek","Zab","Med","Neu","Uay","Arz","Pax","Ord","Iyu","Ech");
+			my $hx = substr($code,3,1);
+			$var{catname} = "$aspect[hex($hx)]";
 		}
 	}
+	my @crumbs = ManateeSQL::glotCrumbs($dbh,$var{code},$var{stage},$lang);
+	my $crumbs = @crumbs;
 }
 </%perl>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -77,6 +85,8 @@ if (length($lang) == 0){
 
 % if (length($var{crumbs})) {
 		<ul class="loaf" id="breadtrail">
+% print $var{crumbs};
+% print $crumbs;
 % 	foreach($var{crumbs}){
 			<li class="crumb" id="sm0{{ crumb[0] }}"><a href="{{ crumb[1] }}{% if var['style'] %}{% if var['crumbdiv'] %}&{% else %}?{% endif %}{{ var['style'] }}{% endif %}">{{ crumb[2]|e }}</a>{% if var['crumbdiv'] %} &gt;{% endif %}
 			</li>
@@ -94,12 +104,12 @@ if (length($lang) == 0){
 		<div class="content" id="sm12">
 			<div class="menu" id="sm14" style="border-color: #<% $var{border} %>;">
 % 	}
-% 	print $var{catinf};
+<% $var{catinf} %>
 % 	print $var{noinf};
 % 	if (length($var{suggsubs})) {
-		You can help fill out this category. Visit <a href="{{ var['sugurl'] }}?lang={{ var['lang'] }}&cowc={{ var['code'] }}{% if var['style'] %}&{{ var['style'] }}{% endif %}">{{ var['code'] }} Divisions</a> to help.
+		You can help fill out this category. Visit <a href="{{ var['sugurl'] }}?lang={{ var['lang'] }}&cowc={{ var['code'] }}{% if var['style'] %}&{{ var['style'] }}{% endif %}"><% $var{code} %> Divisions</a> to help.
 % 	}
-% 	if (length($var{cattrim})) {
+% 	if (length($var{cattrim}) and not $var{y}) {
 		<p class="note" id="sm01">If you are searching for <% $var{catname} %>, add <strong>cowc:#<% $var{cattrim} %></strong> to your search criteria.</p>
 % 	}
 % 	if ($var{dosnip} == 1) {
@@ -161,5 +171,5 @@ Lorem Ipsum
 </body>
 % print %var;
 % print %config;
-Done through ccowhelp.py:72./
+Done through ccowhelp.py:74.
 </html>
