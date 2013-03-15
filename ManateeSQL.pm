@@ -47,7 +47,7 @@ sub glot {
 		$code =~ s/x/o/g;
 		$code =~ s/X/o/g;
 		my $cmd = qq(SELECT ctext FROM $table WHERE ccode = '$code' LIMIT 1;);
-		print "?? $cmd ";
+#		print "?? $cmd ";
 		$result = doQuery(0,$sql,$cmd);
 #		print @{$result}[0];
 		if ($result) {
@@ -68,36 +68,38 @@ sub glot {
 sub glotCrumbs {
 	# returns an array loaded with one or more arrays containing the strings needed to print a trail of breadcrumbs in the approrpiate language.
 	my @crumbs;
-	my ($sql,$code,$stage,$lang) = @_;
+	my ($sql,$code,$stage,$lang,$style) = @_;
+	$style = (length($style)) ? "&$style" : "";
 	my $a; my $b; my $c;
+	my $ic = 0;
 	if ($stage > 4) {
-		print "<!-- Stage reset MS:74 -->";
+		print "!-- Stage reset MS:74 --"; # TODO: make a comment after debugging done
 		$stage = 4;
 	}
 	if ($stage eq '0' or (substr($code,0,1) eq 'x')) { # already at top
 		$a = '5';
-		$b = "";
+		$style = (length($style)) ? substr($style,0,1,'?') : '';
+		$b = "$style";
 		$c = "Change Languages";
-		push(@crumbs,($a,$b,$c));
+		push(@{$crumbs[$ic]},($a,$b,$c));
 	} else {
 		$a = '6';
-		$b = "?lang=$lang";
+		$b = "?lang=$lang$style";
 		$c = "Top (start over)";
-		push(@crumbs,($a,$b,$c));
-		my $ic = 1;
+		push(@{$crumbs[$ic]},($a,$b,$c));
+		$ic++;
 		while ($ic < $stage and (substr($code,$ic,1) ne 'x')) {
 			$a = 6+$ic;
 			$snip = substr($code,0,$ic);
-			$b = "?lang=$lang&cowc=$snip";
+			$b = "?lang=$lang$style&cowc=$snip";
 			while (length($snip) < 4) { $snip = $snip . 'o'; }
 			$c = glot($snip,$sql,$lang,$ic);
 			my @tmp = ($a,$b,$c);
-			push(@crumbs,@tmp);
+			push(@{$crumbs[$ic]},@tmp);
 			$ic++;
 		}
 	}
-	print "@crumbs";
-	return \@crumbs;
+	return @crumbs;
 }
 
 1;

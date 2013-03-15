@@ -20,6 +20,8 @@ my %var = (
 	'title' => 'Default',
 	'lang' => $lang
 );
+my @crumbs;
+
 if (length($style)){ $var{style} = "style=$style"; }
 if (length($lang) == 0){
 	$var{title} = "Select Language";
@@ -64,8 +66,9 @@ if (length($lang) == 0){
 			$var{catname} = "$aspect[hex($hx)]";
 		}
 	}
-	my @crumbs = ManateeSQL::glotCrumbs($dbh,$var{code},$var{stage},$lang);
-	my $crumbs = @crumbs;
+	@crumbs = ManateeSQL::glotCrumbs($dbh,$var{code},$var{stage},$lang,$var{style});
+	$var{crumbs} = scalar(@crumbs); # how many crumbs?
+	$var{crumbdiv} = ($var{crumbs} > 0 and index("xX",substr($var{code},0,1)) eq -1) ? 1 : 0;
 }
 </%perl>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -83,12 +86,13 @@ if (length($lang) == 0){
 % }
 
 
-% if (length($var{crumbs})) {
+% if ($var{crumbs}) {
 		<ul class="loaf" id="breadtrail">
-% print $var{crumbs};
-% print $crumbs;
-% 	foreach($var{crumbs}){
-			<li class="crumb" id="sm0{{ crumb[0] }}"><a href="{{ crumb[1] }}{% if var['style'] %}{% if var['crumbdiv'] %}&{% else %}?{% endif %}{{ var['style'] }}{% endif %}">{{ crumb[2]|e }}</a>{% if var['crumbdiv'] %} &gt;{% endif %}
+% 	foreach my $i (0..$var{crumbs}-1){
+			<li class="crumb" id="sm0<% $crumbs[$i][0] %>"><a href="<% $crumbs[$i][1] %>"><% $crumbs[$i][2] %></a>
+% 		if ($var{crumbdiv}) {
+&gt;
+% 		}
 			</li>
 % 	}
 		</ul>
@@ -171,5 +175,5 @@ Lorem Ipsum
 </body>
 % print %var;
 % print %config;
-Done through ccowhelp.py:74.
+Done through ccowhelp.py:78
 </html>
