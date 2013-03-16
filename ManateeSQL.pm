@@ -102,4 +102,20 @@ sub glotCrumbs {
 	return @crumbs;
 }
 
+sub glotSubs{
+	my @subs;
+	my ($sql,$code,$stage,$lang) = @_;
+	if ($stage == 4) { return @subs; }
+	for (my $i = 0; $i < 16; $i++) {
+		my $c = sprintf("%x", $i);
+		my $scode = substr($code,0,$stage);
+		$scode = $scode . $c;
+		$scode = &Manatee::cleanCode($scode);
+		my $sdesc = glot($scode,$sql,$lang,$stage + 1);
+		my @subarr = ($scode,$c,$sdesc);
+		push(@{$subs[$i]},@subarr);
+	}
+	return @subs;
+}
+
 1;

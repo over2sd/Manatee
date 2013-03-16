@@ -21,6 +21,7 @@ my %var = (
 	'lang' => $lang
 );
 my @crumbs;
+my @subcats;
 
 if (length($style)){ $var{style} = "style=$style"; }
 if (length($lang) == 0){
@@ -69,6 +70,8 @@ if (length($lang) == 0){
 	@crumbs = ManateeSQL::glotCrumbs($dbh,$var{code},$var{stage},$lang,$var{style});
 	$var{crumbs} = scalar(@crumbs); # how many crumbs?
 	$var{crumbdiv} = ($var{crumbs} > 0 and index("xX",substr($var{code},0,1)) eq -1) ? 1 : 0;
+	@subcats = ManateeSQL::glotSubs($dbh,$var{code},$var{stage},$lang);
+	$var{progress} = "View Progress Report";
 }
 </%perl>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -128,12 +131,16 @@ if (length($lang) == 0){
 % 		}
 		<p class="note" id="sm02">You can add this snippet to your HTML's head section to enable search engines that use CCOW to categorize your site.</p>
 % 	}
-% 	if (length($var{subcats})) {
+% 	if ($var{showsubs}) {
 		<p class="drill" id="sm15">If this is not correct, choose a more specific category from the list below:</p> 
 		<p class="clearit"> </p>
-		{% for subcat in var['subcats'] %}
-			<p class="subcat"><a href="{{ var['uri'] }}?lang={{ var['lang'] }}&cowc={{ subcat[0] }}{% if var['style'] %}&{{ var['style'] }}{% endif %}">{{ subcat[1] }}: {{ subcat[2]|e }}</a></p>
-		{% endfor %}
+% 		for (my $i=0; $i < scalar(@subcats); $i++) {
+			<p class="subcat"><a href="?lang=<% $var{lang} %>&cowc=<% $subcats[$i][0] %>
+% 			if (length($var{style})) {
+&<% $var{style} %>
+% 			}
+"><% $subcats[$i][1] %>: <% $subcats[$i][2] %></a></p>
+% 		}
 % 	}
 			<p class="clearit"> </p>
 		</div>
@@ -166,14 +173,5 @@ if (length($lang) == 0){
 	<div class="cc" id="sm11">This helper application is released under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike</a> license.
 	<p>The contents of the translation and description files are released under a <a href="http://creativecommons.org/licenses/by-nd/3.0/">CC Attribution-No Derivative Works</a> license.</p> (C) copyright 2009-2013 by the Manatee Project Workgroup.</div>
 	<p class="source" id="sm12">You can obtain the source for this program at http://nowhere.yet</p>
-% ManateeSQL::glot($var{code},$dbh,$lang,1);
-<!-- & dbpull.comp, 'lang'=>$lang, 'dbh'=>$dbh, 'code'=>$code & -->
-Lorem Ipsum
-<p class="subcat">This is a test subclass 1</p>
-<p class="subcat">This is a test subclass 2</p>
-<p class="subcat">This is a test subclass 3</p>
 </body>
-% print %var;
-% print %config;
-Done through ccowhelp.py:78
 </html>
