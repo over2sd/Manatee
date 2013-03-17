@@ -111,6 +111,7 @@ sub glotSubs{
 		my $scode = substr($code,0,$stage);
 		$scode = $scode . $c;
 		$scode = &Manatee::cleanCode($scode);
+#		print "<br />$scode,$sql,$lang,$stage";
 		my $sdesc = glot($scode,$sql,$lang,$stage + 1);
 		my @subarr = ($scode,$c,$sdesc);
 		push(@{$subs[$i]},@subarr);

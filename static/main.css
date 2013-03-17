@@ -5,7 +5,7 @@ Content-Type: text/css
 
 p { margin: 0px; }
 h1 { clear: left; }
-.loaf { position: absolute; left: 2px; top: 2px; color: #300; list-style-type: circle; }
+.loaf { position: absolute; left: 7px; top: 2px; color: #300; list-style-type: circle; border: 2px solid #906; border-radius: 15px; padding: 7px; background-color: #cff; max-width: 80%; }
 #sm11, #sm17 { clear: left; }
 .crumb { float: left; padding: 2px; display: inline; background-color: #cff; list-style-image:url('arrow.gif'); }
 .effrat { float: right; color: #ddd; } /* text-decoration: line-through; } */

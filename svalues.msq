@@ -1,0 +1,18 @@
+USE ccow;
+INSERT INTO categories_en (ccode,ctext) VALUES('yooo','Explanation of Categories');
+INSERT INTO categories_en (ccode,ctext) VALUES('yoo0','Multiplicity, the topic per se (Hol)');
+INSERT INTO categories_en (ccode,ctext) VALUES('yoo1','Generaltiy, core principles of the topic (Ras)');
+INSERT INTO categories_en (ccode,ctext) VALUES('yoo2','Mentality, Psychology, Philosophy of the topic (Dua)');
+INSERT INTO categories_en (ccode,ctext) VALUES('yoo3','Communicability, Education, Transmission, Transportation (Chi)');
+INSERT INTO categories_en (ccode,ctext) VALUES('yoo4','Sociality, Social aspects, Social impact (Ter)');
+INSERT INTO categories_en (ccode,ctext) VALUES('yoo5','Provability, Empiricism, Objectivity, The near past (Fum)');
+INSERT INTO categories_en (ccode,ctext) VALUES('yoo6','Vitality, Animals, Growth, Health, Leisure, The present (Sek)');
+INSERT INTO categories_en (ccode,ctext) VALUES('yoo7','Sustainability, Provision, Ag/Plants, Maturity (Zab/Zabat)');
+INSERT INTO categories_en (ccode,ctext) VALUES('yoo8','Spatiality, Community, Outer space, Locality (Med)');
+INSERT INTO categories_en (ccode,ctext) VALUES('yoo9','Technology, Technical aspects (Neu)');
+INSERT INTO categories_en (ccode,ctext) VALUES('yooa','Memory, History, The distant past, Traditions (Uay)');
+INSERT INTO categories_en (ccode,ctext) VALUES('yoob','Artistry, The arts, Vision, The seen (Arz)');
+INSERT INTO categories_en (ccode,ctext) VALUES('yooc','Religion, Faith, The unseen, Algorithm, Standards (Pax)');
+INSERT INTO categories_en (ccode,ctext) VALUES('yood','Legality, The law, Government, Policy, Poli/sci, Rules (Ord)');
+INSERT INTO categories_en (ccode,ctext) VALUES('yooe','Specificity, Individuality, Biography, Personal sites (Iyu)');
+INSERT INTO categories_en (ccode,ctext) VALUES('yoof','Marginality, Conjecture, Unaccepted topics, The future, &c. (Ech)');

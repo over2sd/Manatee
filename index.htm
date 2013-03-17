@@ -40,21 +40,21 @@ if (length($lang) == 0){
 	if($var{stage} > 0){
 		$var{cattrim} = $var{catmul};
 	}
-	if($var{stage} lt 4 and not $var{y}){
+	if($var{stage} lt 4){
 		$var{showsubs} = 1;
 		while(length($var{catmul}) lt 4){
 			$var{catmul} = "${var{catmul}}0";
 		}
 		$var{muldesc} = &ManateeSQL::glot($var{catmul},$dbh,$lang,4);
-		$var{catname} = &ManateeSQL::glot($var{code},$dbh,$lang,$var{stage});
 	}
+	$var{catname} = &ManateeSQL::glot($var{code},$dbh,$lang,$var{stage});
 	$var{border} = substr($var{catmul},0,3);
 	if ($var{y}) { # explanation key
+		$var{dosnip} = 0;
 		$var{border} = "00" . substr($var{code},3,1);
 		$var{title} = "Explanation of categories";
 		if(substr($var{code},3,1) eq 'x' ) { # explain subcats
 			$var{expl} = 1;
-			$var{catname} = $var{title};
 			$var{stage} = 3;
 		} else { # explain a single subcat
 			delete $var{catmul};
@@ -62,9 +62,6 @@ if (length($lang) == 0){
 			$var{stage} = 4;
 			delete $var{dosnip};
 			$var{showsubs} = 0;
-			my @aspect = ("Hol","Ras","Dua","Chi","Ter","Fum","Sek","Zab","Med","Neu","Uay","Arz","Pax","Ord","Iyu","Ech");
-			my $hx = substr($code,3,1);
-			$var{catname} = "$aspect[hex($hx)]";
 		}
 	}
 	@crumbs = ManateeSQL::glotCrumbs($dbh,$var{code},$var{stage},$lang,$var{style});
@@ -111,7 +108,15 @@ if (length($lang) == 0){
 		<div class="content" id="sm12">
 			<div class="menu" id="sm14" style="border-color: #<% $var{border} %>;">
 % 	}
-<% $var{catinf} %>
+% 	if (-e $var{catinf}) {
+<& $var{catinf} &>
+!!!
+% 	} else {
+% my $size = -e $var{catinf};
+???
+<% $size %>
+<& cats/dhandler &>
+% 	}
 % 	print $var{noinf};
 % 	if (length($var{suggsubs})) {
 		You can help fill out this category. Visit <a href="{{ var['sugurl'] }}?lang={{ var['lang'] }}&cowc={{ var['code'] }}{% if var['style'] %}&{{ var['style'] }}{% endif %}"><% $var{code} %> Divisions</a> to help.
@@ -130,9 +135,9 @@ if (length($lang) == 0){
 			<p class="note" id="sm13">The snippet for this category is: <strong>&lt;meta name="cowc" content="#<% $var{code} %>" /&gt;</strong></p>
 % 		}
 		<p class="note" id="sm02">You can add this snippet to your HTML's head section to enable search engines that use CCOW to categorize your site.</p>
+		<p class="drill" id="sm15">If this is not correct, choose a more specific category from the list below:</p> 
 % 	}
 % 	if ($var{showsubs}) {
-		<p class="drill" id="sm15">If this is not correct, choose a more specific category from the list below:</p> 
 		<p class="clearit"> </p>
 % 		for (my $i=0; $i < scalar(@subcats); $i++) {
 			<p class="subcat"><a href="?lang=<% $var{lang} %>&cowc=<% $subcats[$i][0] %>
@@ -172,6 +177,7 @@ if (length($lang) == 0){
 
 	<div class="cc" id="sm11">This helper application is released under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike</a> license.
 	<p>The contents of the translation and description files are released under a <a href="http://creativecommons.org/licenses/by-nd/3.0/">CC Attribution-No Derivative Works</a> license.</p> (C) copyright 2009-2013 by the Manatee Project Workgroup.</div>
-	<p class="source" id="sm12">You can obtain the source for this program at http://nowhere.yet</p>
+	<p class="source" id="sm12">You can obtain the source for this program at https://github.com/over2sd/Manatee/</p>
+% print $m->dhandler_name();
 </body>
 </html>
