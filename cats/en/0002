@@ -1,5 +1,5 @@
 		<p class="desc">Header Info Search Engines (#0002) are search engines that index the keywords and description in the &lt;meta&gt; tags in the head section of a page and allow users to search based on a keyword query. Most search engines do not use header info as the primary method of indexing pages, because abuse of keywords is widespread, but most engines do include some parsing of the header info in addition to their primary methods.</p>
 		<p class="example">No example of this type of site is known to the author of this page, but such a search engine could exist somewhere.</p>
-		<p class="subs">This type of site can contain subpages from categories #0002 and <a href="ccowhelp.py?lang=en&cowc=000x">#0004-#0007</a>.</p>
+		<p class="subs">This type of site can contain subpages from categories #0002 and <a href="?lang=en&cowc=000x">#0004-#0007</a>.</p>
 		<p class="similar">See <a href="ccowhelp.cgi?lang=en&cowc=000x">Search Engines and Directories</a> for similar categories.</p>
 		<p class="cc" id="rcm">This description page is copyrighted material released under a <a href="http://creativecommons.org/licenses/by-nd/3.0/">Creative Commons Attribution-No Derivative Works</a> license. (C) copyright 2009.</p>

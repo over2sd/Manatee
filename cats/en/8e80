@@ -1,4 +1,4 @@
-		<p class="desc">General/Multiple Travel by Region (#8e80) is not used. For sites covering multiple regions, use the category <a href="ccowhelp.py?lang=en&cowc=8e81&end=1">#8e81</a>: World Travel. Otherwise, choose the appropriate region.</p>
+		<p class="desc">General/Multiple Travel by Region (#8e80) is not used. For sites covering multiple regions, use the category <a href="?lang=en&cowc=8e81&end=1">#8e81</a>: World Travel. Otherwise, choose the appropriate region.</p>
 		<p class="example">No examples. This category is not used.</p>
-		<p class="similar">See <a href="ccowhelp.py?lang=en&cowc=8e8x&end=1">Travel by Region</a> for similar categories.</p>
+		<p class="similar">See <a href="?lang=en&cowc=8e8x&end=1">Travel by Region</a> for similar categories.</p>
 		<p class="cc" id="rcm">This description page is copyrighted material released under a <a href="http://creativecommons.org/licenses/by-nd/3.0/">Creative Commons Attribution-No Derivative Works</a> license. (C) copyright 2009.</p>
