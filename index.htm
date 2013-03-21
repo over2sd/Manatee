@@ -5,6 +5,7 @@ $cowc => 'XXXX'
 $style => ''
 </%args>
 <%perl>
+my $localpath = '/var/www/ccow-m';
 use lib '/var/www/ccow-m';
 use Manatee;
 use ManateeSQL;
@@ -69,6 +70,10 @@ if (length($lang) == 0){
 	$var{crumbdiv} = ($var{crumbs} > 0 and index("xX",substr($var{code},0,1)) eq -1) ? 1 : 0;
 	@subcats = ManateeSQL::glotSubs($dbh,$var{code},$var{stage},$lang);
 	$var{progress} = "View Progress Report";
+
+my $resolver = HTML::Mason::Resolver::File->new();
+
+$var{info} = $resolver->get_info('cats/en/yxxx');
 }
 </%perl>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -108,13 +113,9 @@ if (length($lang) == 0){
 		<div class="content" id="sm12">
 			<div class="menu" id="sm14" style="border-color: #<% $var{border} %>;">
 % 	}
-% 	if (-e $var{catinf}) {
+% 	if (-e "$localpath/$var{catinf}") {
 <& $var{catinf} &>
-!!!
 % 	} else {
-% my $size = -e $var{catinf};
-???
-<% $size %>
 <& cats/dhandler &>
 % 	}
 % 	print $var{noinf};
@@ -178,6 +179,5 @@ if (length($lang) == 0){
 	<div class="cc" id="sm11">This helper application is released under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike</a> license.
 	<p>The contents of the translation and description files are released under a <a href="http://creativecommons.org/licenses/by-nd/3.0/">CC Attribution-No Derivative Works</a> license.</p> (C) copyright 2009-2013 by the Manatee Project Workgroup.</div>
 	<p class="source" id="sm12">You can obtain the source for this program at https://github.com/over2sd/Manatee/</p>
-% print $m->dhandler_name();
 </body>
 </html>
