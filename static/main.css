@@ -12,7 +12,7 @@ h1 { clear: left; }
 .cc { display: block; clear: right; }
 .sugg {}
 .note {}
-.desc { border: 1px solid #009; padding: 4px; }
+.desc { border-radius: 7px; border: 1px solid #009; padding: 4px; background-color: #eef; }
 .similar {}
 .example {}
 .subs {}
@@ -22,8 +22,8 @@ h1 { clear: left; }
 #rcm { display: none; }
 .i18nerr { color: #600; background-color: #ffc; text-align: center; }
 .subcat { float: left; padding: 8px; width: 22%; margin: 1em 0px; }
-.subcat a, .subcat a:link, .subcat a:visited, .subcat a:active, .subcat a:hover, .subcat span { display: block; border: 3px outset #0c6; text-align: center; padding: 0.25em; background-color: #0c6; color: #105; width: 98%; height: 6em; margin-top: -2.5em; text-decoration: none; font-size: 0.96em; }
-.menu { border: 5px ridge; border-bottom: 0px; padding: 7px 7px 0 7px; margin: 0; }
+.subcat a, .subcat a:link, .subcat a:visited, .subcat a:active, .subcat a:hover, .subcat span { display: block; border-radius: 7px; border: 3px outset #0c6; text-align: center; padding: 0.25em; background-color: #0c6; color: #105; width: 98%; height: 6em; margin-top: -2.5em; text-decoration: none; font-size: 0.96em; }
+.menu { border-radius: 30px; border: 5px solid; padding: 17px 7px 0 7px; margin: 0; }
 .drill { margin: 0px; }
 table.progress { width: 100%; } 
 table.progress tr td { height: 7px; padding: 0px; margin: 1px; }

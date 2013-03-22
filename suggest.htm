@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<%args>
+$lang => ''
+$cowc => 'XXXX'
+$style => ''
+</%args>
+<%perl>
+my %var;
+my %config;
+</%perl>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3c.org/1999/xhtml" lang="EN">
+<head>
+	<title><% $config{site} %>: <% $var{title} %></title>
+	<link rel="stylesheet" type="text/css" href="static/main.css" />
+% if(length($config{custom})){
+	<link rel="stylesheet" type="text/css" href="static/<% $config{custom} %>.css" />
+%}
+</head>
+<body>
+% if(length($config{logo})){
+	<div class="logo"><img src="img/<% $config{logo} %>" alt="<% $config{logodesc} %>" title="<% $config{logodesc} %>" /></div>
+% }
+
+	<p class="clearit"> </p>
+
+	<div class="cc" id="sm11">This helper application is released under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike</a> license.
+	<p>The contents of the translation and description files are released under a <a href="http://creativecommons.org/licenses/by-nd/3.0/">CC Attribution-No Derivative Works</a> license.</p> (C) copyright 2009-2013 by the Manatee Project Workgroup.</div>
+	<p class="source" id="sm12">You can obtain the source for this program at https://github.com/over2sd/Manatee/</p>
+</body>
+</html>
