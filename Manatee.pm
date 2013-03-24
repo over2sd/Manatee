@@ -1,8 +1,18 @@
 package Manatee;
 
-require Exporter;
-@ISA = qw(Exporter);
-@EXPORT = qw(chooseStyle cleanCode getStage unsql);
+use Cwd;
+
+sub loadConfig{
+	my ($style) = @_;
+	# TODO: sort out reading config file with Mason's paths and put it here
+	my %config = (
+		'site' => 'Manatee',
+		'logo' => 'manateelogo.png',
+		'logodesc' => 'Logo: drawing of a sea cow.',
+		'custom' => chooseStyle($style)
+	);
+	return %config;
+}
 
 sub chooseStyle {
 	my ($style) = @_;

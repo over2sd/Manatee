@@ -14,10 +14,23 @@ my %config = (
 );
 my %var;
 
-print "CREATE DATABASE ccow;
+sub dumpBase{
+	open FILE, ">", "ccowback.msq" or die $!;
+	print FILE "CREATE DATABASE ccow;
 USE ccow;
-CREATE TABLE cats ( cid INT(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, ccode CHAR(4) default NULL, ctext VARCHAR(65) );
 ";
 
+	my @result = &ManateeSQL::doQuery(5,$dbh,qq(SHOW TABLES LIKE 'categories_%';));
+	foreach my $column (@result) {
+		foreach my $row (@{$column}) {;
+			&Manadmin::dumpTable($dbh,"$row->[0]",*FILE);
+		}
+	}
+	print FILE "\n";
+	&Manadmin::dumpTable($dbh,"cats",*FILE);
+	print FILE "\n";
+	close FILE;
+}
 
-&Manadmin::dumpBase($dbh,"categories_en","tmp.txt");
+dumpBase();
+1;

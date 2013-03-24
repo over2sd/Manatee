@@ -1,3 +1,7 @@
+2013-03-23 (and earlier):
+- Added an admin script (so far, only dumps the database into a backup flat file).
+- Started work on the suggestion form.
+
 2013-03-15:
 - Finished porting ccowhelp to perl.
 

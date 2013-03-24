@@ -1,12 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <%args>
 $lang => ''
-$cowc => 'XXXX'
+$scod => 'XXXX'
 $style => ''
+$sdesc => '[Suggestion]'
+$srat => '[Rationale]'
 </%args>
 <%perl>
-my %var;
-my %config;
+my $localpath = '/var/www/ccow-m';
+use lib '/var/www/ccow-m';
+use Manatee;
+
+my $build = '003';
+my %var = (
+	'title' => 'Default',
+	'lang' => $lang,
+	'build' => $build
+);
+my %config = &Manatee::loadConfig($style);
+if (length($style)){ $var{style} = "style=$style"; }
+if (length($lang) == 0){
+	$var{title} = "Select Language";
+} else {
+	my $code = &Manatee::cleanCode($scod);
+	$var{title} = $code;
+	if (length($code) == 0){
+		$var{scod} = $code;
+	} else {
+		$var{showerr} = 1;
+		$var{showform} = 0;
+		$var{scod} = "----";
+		$var{error} = "Please provide a code to make a suggestion.";
+
+	}
+}
 </%perl>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3c.org/1999/xhtml" lang="EN">
@@ -27,5 +54,6 @@ my %config;
 	<div class="cc" id="sm11">This helper application is released under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike</a> license.
 	<p>The contents of the translation and description files are released under a <a href="http://creativecommons.org/licenses/by-nd/3.0/">CC Attribution-No Derivative Works</a> license.</p> (C) copyright 2009-2013 by the Manatee Project Workgroup.</div>
 	<p class="source" id="sm12">You can obtain the source for this program at https://github.com/over2sd/Manatee/</p>
+Done through ccowsugg:36
 </body>
 </html>

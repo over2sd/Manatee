@@ -27,6 +27,8 @@ sub doQuery {
 		$realq = $dbh->selectall_arrayref($statement, { Slice => {} });
 	} elsif ($qtype == 3){
 		$realq = $dbh->selectall_hashref($statement, { Slice => {} });
+	} elsif ($qtype == 5){
+		$realq = $dbh->selectall_arrayref($statement);
 	} else {
 		print "Invalid query type";
 	}

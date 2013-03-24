@@ -11,12 +11,7 @@ use Manatee;
 use ManateeSQL;
 $style = substr($style,0,3);
 my $dbh = &ManateeSQL::getDB();
-my %config = (
-	'site' => 'Manatee',
-	'logo' => 'manateelogo.png',
-	'logodesc' => 'Logo: drawing of a sea cow.',
-	'custom' => &Manatee::chooseStyle($style)
-);
+my %config = &Manatee::loadConfig($style);
 my %var = (
 	'title' => 'Default',
 	'lang' => $lang
