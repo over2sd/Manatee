@@ -18,12 +18,15 @@ my %var = (
 	'build' => $build
 );
 my %config = &Manatee::loadConfig($style);
+if (length($config{site}) == 0) {
+	$config{site} = "Manatee";
+}
 if (length($style)){ $var{style} = "style=$style"; }
 if (length($lang) == 0){
 	$var{title} = "Select Language";
 } else {
 	my $code = &Manatee::cleanCode($scod);
-	$var{title} = $code;
+	$var{title} = "Suggest a Category";
 	if (length($code) == 0){
 		$var{scod} = $code;
 	} else {
@@ -31,8 +34,10 @@ if (length($lang) == 0){
 		$var{showform} = 0;
 		$var{scod} = "----";
 		$var{error} = "Please provide a code to make a suggestion.";
-
 	}
+	$var{sdesc} = &Manatee::formClean($sdesc);
+	$var{srat} = &Manatee::formClean($srat);
+	$var{custom} = $var{style};
 }
 </%perl>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -54,6 +59,6 @@ if (length($lang) == 0){
 	<div class="cc" id="sm11">This helper application is released under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike</a> license.
 	<p>The contents of the translation and description files are released under a <a href="http://creativecommons.org/licenses/by-nd/3.0/">CC Attribution-No Derivative Works</a> license.</p> (C) copyright 2009-2013 by the Manatee Project Workgroup.</div>
 	<p class="source" id="sm12">You can obtain the source for this program at https://github.com/over2sd/Manatee/</p>
-Done through ccowsugg:36
+Done through ccowsugg:47
 </body>
 </html>

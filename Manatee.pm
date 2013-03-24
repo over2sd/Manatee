@@ -2,6 +2,13 @@ package Manatee;
 
 use Cwd;
 
+sub formClean{
+	my ($s) = @_;
+	$s =~ s/"/'/g;
+	$s =~ s/\n/ /g;
+	return $s;
+}
+
 sub loadConfig{
 	my ($style) = @_;
 	# TODO: sort out reading config file with Mason's paths and put it here
