@@ -2,6 +2,17 @@ package Manatee;
 
 use Cwd;
 
+sub suggVars{
+	my ($lang,$build,$scod,$sdesc,$srat) = @_;
+	my %var = (
+		'title' => 'Default',
+		'lang' => $lang,
+		'build' => $build
+	);
+
+	return %var;
+}
+
 sub formClean{
 	my ($s) = @_;
 	$s =~ s/"/'/g;

@@ -6,6 +6,7 @@ require Exporter;
 @EXPORT = qw(getDB glot);
 
 sub getDB {
+#	my ($a,$b,$c,$d) = @_
 	my $host = 'localhost';
 	my $base = 'ccow';
 	my $password = '';

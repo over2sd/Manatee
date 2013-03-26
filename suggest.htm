@@ -10,14 +10,17 @@ $srat => '[Rationale]'
 my $localpath = '/var/www/ccow-m';
 use lib '/var/www/ccow-m';
 use Manatee;
+use ManateeSQL;
 
 my $build = '003';
-my %var = (
-	'title' => 'Default',
-	'lang' => $lang,
-	'build' => $build
-);
 my %config = &Manatee::loadConfig($style);
+my %var = &Manatee::suggVars($lang,$build,$scod,$sdesc,$srat);
+my $dbh;
+if (!$var{showerr}) {
+	$dbh = &ManateeSQL::getDB();
+}
+
+
 if (length($config{site}) == 0) {
 	$config{site} = "Manatee";
 }
@@ -43,8 +46,11 @@ if (length($lang) == 0){
 		$var{showform} = 1;
 	}
 	if (($var{scod} eq "xxxx") or ($var{scod} =~ m/y/)) {
-		$var{debug} = "YYYYY";
+		$var{showform} = 0;
+		$var{showerr} = 1;
+		$var{error} = "You have entered an invalid CCOW code. You may not suggest new names for the top-level category or explanation categories. Please try again.";
 	}
+
 }
 </%perl>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -68,6 +74,6 @@ if (length($lang) == 0){
 	<p>The contents of the translation and description files are released under a <a href="http://creativecommons.org/licenses/by-nd/3.0/">CC Attribution-No Derivative Works</a> license.</p> (C) copyright 2009-2013 by the Manatee Project Workgroup.</div>
 	<p class="source" id="sm12">You can obtain the source for this program at https://github.com/over2sd/Manatee/</p>
 % print %var;
-<br />Done through ccowsugg:49
+<br />Done through ccowsugg:54
 </body>
 </html>
