@@ -7,7 +7,6 @@ $sdesc => '[Suggestion]'
 $srat => '[Rationale]'
 </%args>
 <%perl>
-my $localpath = '/var/www/ccow-m';
 use lib '/var/www/ccow-m';
 use Manatee;
 use ManateeSQL;
@@ -18,6 +17,11 @@ my %var = &Manatee::suggVars($lang,$build,$scod,$sdesc,$srat);
 my $dbh;
 if (!$var{showerr}) {
 	$dbh = &ManateeSQL::getDB();
+	$var{stage} = &Manatee::getStage($var{scod});
+	$var{catname} = &ManateeSQL::glot($var{scod},$dbh,$lang,$var{stage});
+	
+
+
 }
 
 

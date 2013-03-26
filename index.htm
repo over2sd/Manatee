@@ -5,71 +5,19 @@ $cowc => 'XXXX'
 $style => ''
 </%args>
 <%perl>
-my $localpath = '/var/www/ccow-m';
 use lib '/var/www/ccow-m';
 use Manatee;
 use ManateeSQL;
+
 $style = substr($style,0,3);
 my $dbh = &ManateeSQL::getDB();
 my %config = &Manatee::loadConfig($style);
-my %var = (
-	'title' => 'Default',
-	'lang' => $lang
-);
-my @crumbs;
-my @subcats;
-
+my %var = &Manatee::helpVars($lang,$cowc,$dbh);
 if (length($style)){ $var{style} = "style=$style"; }
-if (length($lang) == 0){
-	$var{title} = "Select Language";
-} else {
-	my $code = &Manatee::cleanCode($cowc);
-	$var{title} = $code;
-	$var{code} = $code;
-	$var{y} = (substr($var{code},0,1) eq 'y') ? 1 : 0;
-	$var{dosnip} = 1;
-	$var{showsubs} = 0;
-	$var{stage} = getStage($code);
-	$var{catmul} = substr($code,0,$var{stage});
-	$var{cattrim} = '';
-	$var{catinf} = "cats/$lang/$code";
-	if($var{stage} > 0){
-		$var{cattrim} = $var{catmul};
-	}
-	if($var{stage} lt 4){
-		$var{showsubs} = 1;
-		while(length($var{catmul}) lt 4){
-			$var{catmul} = "${var{catmul}}0";
-		}
-		$var{muldesc} = &ManateeSQL::glot($var{catmul},$dbh,$lang,4);
-	}
-	$var{catname} = &ManateeSQL::glot($var{code},$dbh,$lang,$var{stage});
-	$var{border} = substr($var{catmul},0,3);
-	if ($var{y}) { # explanation key
-		$var{dosnip} = 0;
-		$var{border} = "00" . substr($var{code},3,1);
-		$var{title} = "Explanation of categories";
-		if(substr($var{code},3,1) eq 'x' ) { # explain subcats
-			$var{expl} = 1;
-			$var{stage} = 3;
-		} else { # explain a single subcat
-			delete $var{catmul};
-			$var{cattrim} = "*" . substr($var{code},3,1);
-			$var{stage} = 4;
-			delete $var{dosnip};
-			$var{showsubs} = 0;
-		}
-	}
-	@crumbs = ManateeSQL::glotCrumbs($dbh,$var{code},$var{stage},$lang,$var{style});
-	$var{crumbs} = scalar(@crumbs); # how many crumbs?
-	$var{crumbdiv} = ($var{crumbs} > 0 and index("xX",substr($var{code},0,1)) eq -1) ? 1 : 0;
-	@subcats = ManateeSQL::glotSubs($dbh,$var{code},$var{stage},$lang);
-	$var{progress} = "View Progress Report";
-
-my $resolver = HTML::Mason::Resolver::File->new();
-
-$var{info} = $resolver->get_info('cats/en/yxxx');
-}
+my @crumbs = ManateeSQL::glotCrumbs($dbh,$var{code},$var{stage},$lang,$var{style});
+$var{crumbs} = scalar(@crumbs); # how many crumbs?
+$var{crumbdiv} = ($var{crumbs} > 0 and index("xX",substr($var{code},0,1)) eq -1) ? 1 : 0;
+my @subcats = ManateeSQL::glotSubs($dbh,$var{code},$var{stage},$lang);
 </%perl>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3c.org/1999/xhtml" lang="EN">
@@ -108,7 +56,7 @@ $var{info} = $resolver->get_info('cats/en/yxxx');
 		<div class="content" id="sm12">
 			<div class="menu" id="sm14" style="border-color: #<% $var{border} %>;">
 % 	}
-% 	if (-e "$localpath/$var{catinf}") {
+% 	if (-e "$config{localpath}/$var{catinf}") {
 <& $var{catinf} &>
 % 	} else {
 <& cats/dhandler &>

@@ -21,7 +21,7 @@ h1 { clear: left; }
 .source { display: none; }
 #rcm { display: none; }
 .i18nerr { color: #600; background-color: #ffc; text-align: center; }
-.subcat { float: left; padding: 8px; width: 22%; margin: 1em 0px; }
+.subcat { float: left; padding: 8px; width: 22.65%; margin: 1.05em .125%; position: relative; left: .5%; }
 .subcat a, .subcat a:link, .subcat a:visited, .subcat a:active, .subcat a:hover, .subcat span { display: block; border-radius: 7px; border: 3px outset #0c6; text-align: center; padding: 0.25em; background-color: #0c6; color: #105; width: 98%; height: 6em; margin-top: -2.5em; text-decoration: none; font-size: 0.96em; }
 .menu { border-radius: 30px; border: 5px solid; padding: 17px 7px 0 7px; margin: 0; }
 .drill { margin: 0px; }

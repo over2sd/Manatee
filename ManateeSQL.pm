@@ -68,6 +68,7 @@ sub glot {
 	} else {
 		print "Language not found! Fallback failed!";
 	}
+	return $out;
 }
 
 sub glotCrumbs {
