@@ -3,7 +3,7 @@ package Manatee;
 use Cwd;
 
 sub suggVars{
-	my ($lang,$build,$scod,$sdesc,$srat) = @_;
+	my ($lang,$build,$scod,$sdesc,$srat,$dbh) = @_;
 	my %var = (
 		'title' => 'Default',
 		'lang' => $lang,

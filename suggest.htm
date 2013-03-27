@@ -13,16 +13,8 @@ use ManateeSQL;
 
 my $build = '003';
 my %config = &Manatee::loadConfig($style);
-my %var = &Manatee::suggVars($lang,$build,$scod,$sdesc,$srat);
-my $dbh;
-if (!$var{showerr}) {
-	$dbh = &ManateeSQL::getDB();
-	$var{stage} = &Manatee::getStage($var{scod});
-	$var{catname} = &ManateeSQL::glot($var{scod},$dbh,$lang,$var{stage});
-	
-
-
-}
+my $dbh = &ManateeSQL::getDB();
+my %var = &Manatee::suggVars($lang,$build,$scod,$sdesc,$srat,$dbh);
 
 
 if (length($config{site}) == 0) {
@@ -34,13 +26,13 @@ if (length($lang) == 0){
 } else {
 	my $code = &Manatee::cleanCode($scod);
 	$var{title} = "Suggest a Category";
-	if (length($code) == 0){
+	if (length($code) != 0){
 		$var{scod} = lc $code;
 	} else {
 		$var{showerr} = 1;
 		$var{showform} = 0;
-		$var{scod} = lc $code;
-#		$var{scod} = "----";
+#		$var{scod} = lc $code;
+		$var{scod} = "----";
 		$var{error} = "Please provide a code to make a suggestion.";
 	}
 	$var{sdesc} = &Manatee::formClean($sdesc);
@@ -54,8 +46,34 @@ if (length($lang) == 0){
 		$var{showerr} = 1;
 		$var{error} = "You have entered an invalid CCOW code. You may not suggest new names for the top-level category or explanation categories. Please try again.";
 	}
+	if (!$var{showerr}) {
+		$var{stage} = &Manatee::getStage($var{scod});
+		$var{catname} = &ManateeSQL::glot($var{scod},$dbh,$lang,$var{stage});
+		if (substr($var{catname},0,1) eq "[") {
+			if (length($var{sdesc}) != 0 && substr($var{sdesc},0,1) ne "[") {
+				$var{showform} = 0;
+				
+			} else {
+				print $var{sdesc};
+				$var{showform} = 1;
+			}
+		} else {
+			$var{showerr} = 1;
+			$var{showform} = 0;
+			$var{showsubs} = 1;
+#			$var{scod} = lc $code;
+			$var{scod} = "----";
+			$var{error} = "You have chosen an existing category. Please choose another category, or suggest a subcategory, if possible.";
+		}
+	}
 
 }
+
+
+my @crumbs = ManateeSQL::glotCrumbs($dbh,$var{scod},$var{stage},$lang,$var{style});
+$var{crumbs} = scalar(@crumbs); # how many crumbs?
+$var{crumbdiv} = ($var{crumbs} > 0 and index("xX",substr($var{scod},0,1)) eq -1) ? 1 : 0;
+my @subcats = ManateeSQL::glotSubs($dbh,$var{scod},$var{stage},$lang);
 </%perl>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3c.org/1999/xhtml" lang="EN">
@@ -71,13 +89,28 @@ if (length($lang) == 0){
 % if(length($config{logo})){
 	<div class="logo"><img src="img/<% $config{logo} %>" alt="<% $config{logodesc} %>" title="<% $config{logodesc} %>" /></div>
 % }
-
 	<p class="clearit"> </p>
+% if ($var{crumbs}) {
+		<ul class="loaf" id="breadtrail">
+% 	foreach my $i (0..$var{crumbs}-1){
+			<li class="crumb" id="sm0<% $crumbs[$i][0] %>"><a href="<% $crumbs[$i][1] %>"><% $crumbs[$i][2] %></a>
+% 		if ($var{crumbdiv}) {
+&gt;
+% 		}
+			</li>
+% 	}
+		</ul>
+% }
+		<p class="clearit"> </p>
+		<h1 id="sm11">Suggestion for category <% substr($var{scod},$var{stage}-1,1) %>: <% $var{catname} %></h1>
 
 	<div class="cc" id="sm11">This helper application is released under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike</a> license.
 	<p>The contents of the translation and description files are released under a <a href="http://creativecommons.org/licenses/by-nd/3.0/">CC Attribution-No Derivative Works</a> license.</p> (C) copyright 2009-2013 by the Manatee Project Workgroup.</div>
 	<p class="source" id="sm12">You can obtain the source for this program at https://github.com/over2sd/Manatee/</p>
 % print %var;
-<br />Done through ccowsugg:54
+% foreach my $x (@crumbs) {
+%	print $x->[2];
+% }
+<br />Done through ccowsugg:55
 </body>
 </html>
