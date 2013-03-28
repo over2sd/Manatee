@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <%args>
 $lang => ''
-$scod => 'XXXX'
+$scod => 'XXXX' # for compatibility with python version
+$cowc => $scod
 $style => ''
 $sdesc => '[Suggestion]'
 $srat => '[Rationale]'
 </%args>
 <%perl>
+use Apache2::Connection ();
 use lib '/var/www/ccow-m';
 use Manatee;
 use ManateeSQL;
@@ -14,66 +16,52 @@ use ManateeSQL;
 my $build = '003';
 my %config = &Manatee::loadConfig($style);
 my $dbh = &ManateeSQL::getDB();
-my %var = &Manatee::suggVars($lang,$build,$scod,$sdesc,$srat,$dbh);
+my %var = &Manatee::suggVars($lang,$build,$cowc,$sdesc,$srat,$dbh);
 
 
 if (length($config{site}) == 0) {
 	$config{site} = "Manatee";
 }
 if (length($style)){ $var{style} = "style=$style"; }
-if (length($lang) == 0){
-	$var{title} = "Select Language";
-} else {
-	my $code = &Manatee::cleanCode($scod);
-	$var{title} = "Suggest a Category";
-	if (length($code) != 0){
-		$var{scod} = lc $code;
-	} else {
-		$var{showerr} = 1;
-		$var{showform} = 0;
-#		$var{scod} = lc $code;
-		$var{scod} = "----";
-		$var{error} = "Please provide a code to make a suggestion.";
-	}
-	$var{sdesc} = &Manatee::formClean($sdesc);
-	$var{srat} = &Manatee::formClean($srat);
-	$var{custom} = $var{style};
-	if (substr($var{sdesc},0,1) == '[') {
-		$var{showform} = 1;
-	}
-	if (($var{scod} eq "xxxx") or ($var{scod} =~ m/y/)) {
-		$var{showform} = 0;
-		$var{showerr} = 1;
-		$var{error} = "You have entered an invalid CCOW code. You may not suggest new names for the top-level category or explanation categories. Please try again.";
-	}
-	if (!$var{showerr}) {
-		$var{stage} = &Manatee::getStage($var{scod});
-		$var{catname} = &ManateeSQL::glot($var{scod},$dbh,$lang,$var{stage});
-		if (substr($var{catname},0,1) eq "[") {
-			if (length($var{sdesc}) != 0 && substr($var{sdesc},0,1) ne "[") {
-				$var{showform} = 0;
-				
-			} else {
-				print $var{sdesc};
-				$var{showform} = 1;
-			}
-		} else {
-			$var{showerr} = 1;
-			$var{showform} = 0;
-			$var{showsubs} = 1;
-#			$var{scod} = lc $code;
-			$var{scod} = "----";
-			$var{error} = "You have chosen an existing category. Please choose another category, or suggest a subcategory, if possible.";
-		}
-	}
 
+#suggest.htm
+$var{ip} = $r->connection->remote_ip;
+my @crumbs = ManateeSQL::glotCrumbs($dbh,$var{cowc},$var{stage},$lang,$var{style});
+$var{crumbs} = scalar(@crumbs); # how many crumbs?
+$var{crumbdiv} = ($var{crumbs} > 0 and index("xX",substr($var{cowc},0,1)) eq -1) ? 1 : 0;
+my @subcats;
+if ($var{showsubs}) {
+	@subcats = ManateeSQL::glotSubs($dbh,$var{cowc},$var{stage},$lang);
+}
+$var{suggested} = 0;
+my @suggestions;
+# $var{push} = &ManateeSQL::pushSugg($dbh,$var{ip},$var{cowc},$var{sdesc},$var{srat});
+# @suggestions = &Manatee::getSuggs($dbh,$var{cowc},$var{lang})
+if (@suggestions) {
+	$var{suggested} = 1;
 }
 
+print "<br /><br />??!<br />";
 
-my @crumbs = ManateeSQL::glotCrumbs($dbh,$var{scod},$var{stage},$lang,$var{style});
-$var{crumbs} = scalar(@crumbs); # how many crumbs?
-$var{crumbdiv} = ($var{crumbs} > 0 and index("xX",substr($var{scod},0,1)) eq -1) ? 1 : 0;
-my @subcats = ManateeSQL::glotSubs($dbh,$var{scod},$var{stage},$lang);
+# getSuggs
+my $code = $var{cowc};
+$code =~ s/x/o/g;
+$code =~ s/X/o/g;
+@suggestions = &ManateeSQL::glotSuggs($dbh,$code,$lang);
+
+$var{suggested} = 1;
+# pushSugg
+#my $code = $var{cowc};
+$code =~ s/x/o/g;
+$code =~ s/X/o/g;
+my $toosoon = &ManateeSQL::countRecords($dbh,0,"cats",$code,$lang,$var{ip});
+if (!$toosoon) {
+	$var{pushcmd} = qq(INSERT INTO cats (ccode,ctext,rationale,ip,lang) VALUES ('$code','$var{sdesc}','$var{srat}','$var{ip}','$lang'););
+
+} else {
+	$var{pushcmd} = "TOOSOON!";
+#	return 1; # too soon
+}
 </%perl>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3c.org/1999/xhtml" lang="EN">
@@ -90,6 +78,22 @@ my @subcats = ManateeSQL::glotSubs($dbh,$var{scod},$var{stage},$lang);
 	<div class="logo"><img src="img/<% $config{logo} %>" alt="<% $config{logodesc} %>" title="<% $config{logodesc} %>" /></div>
 % }
 	<p class="clearit"> </p>
+% if (length($var{lang}) == 0) {
+		<h1 id="sm10"><% $var{title} %></h1>
+		<div class="languages">
+			<p class="lingua"><a href="?lang=en
+% if(length($var{style})){
+&<% $var{style} %>
+% }
+">Language: English</a></p>
+			<p class="lingua"><a href="?lang=es
+% if(length($var{style})){
+&<% $var{style} %>
+% }
+">Idioma: Español</a></p>
+		</div>
+% } else {
+
 % if ($var{crumbs}) {
 		<ul class="loaf" id="breadtrail">
 % 	foreach my $i (0..$var{crumbs}-1){
@@ -102,15 +106,57 @@ my @subcats = ManateeSQL::glotSubs($dbh,$var{scod},$var{stage},$lang);
 		</ul>
 % }
 		<p class="clearit"> </p>
-		<h1 id="sm11">Suggestion for category <% substr($var{scod},$var{stage}-1,1) %>: <% $var{catname} %></h1>
+	<p>Return to <a href="index.htm">CCOW helper</a></p>
+	<h1 id="sm11">Suggestion for subcategory <% substr($var{cowc},$var{stage}-1,1) %>: <% $var{catname} %></h1>
+% if ($var{showform}) {
+	<form name="suggest" method="post" action="suggest.htm">
+		Code: <input type="text" name="cowc" size="4" value="<% $var{cowc} %>" /><br />
+		Description: <input type="text" name="sdesc" size="75%" value="<% $var{sdesc} %>" /><br />
+		Rationale: <input type="text" name="srat" size="75%" value="<% $var{srat} %>" /><br />
+		<input type="hidden" name="lang" value="<% $var{lang} %>" />
+		<input type="hidden" name="style" value="<% $var{style} %>" />
+		<input type="submit"  value="Suggest" />
+	</form>
+% } else {
+	<p>You entered: <% $var{cowc} %>: "<% $var{sdesc} %>" - "<% $var{srat} %>"</p>
+% }
+% if ($var{suggested}) {
+	Current suggestions for <% $var{cowc} %>:
+	<table><tr><th>Suggestion</th><th>Rationale</th></tr>
+% 	foreach my $s (@suggestions) {
+%		foreach my $t ($s) {
+			<% $t->[0] %>
+%		}
+		<tr><td><% $s->[0] %></td><td><% $s->[1] %></td></tr>
+% 	}
+	</table>
+% }
+
+Nothing to see, yet.
+% if ($var{showerr}) {
+	<p class="errtext"><% $var{error} %></p>
+% }
+% 	if ($var{showsubs}) {
+		<p class="clearit"> </p>
+% 		for (my $i=0; $i < scalar(@subcats); $i++) {
+			<p class="subcat"><a href="?lang=<% $var{lang} %>&cowc=<% $subcats[$i][0] %>
+% 			if (length($var{style})) {
+&<% $var{style} %>
+% 			}
+"><% $subcats[$i][1] %>: <% $subcats[$i][2] %></a></p>
+% 		}
+% 	}
+			<p class="clearit"> </p>
+% }
+
 
 	<div class="cc" id="sm11">This helper application is released under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike</a> license.
 	<p>The contents of the translation and description files are released under a <a href="http://creativecommons.org/licenses/by-nd/3.0/">CC Attribution-No Derivative Works</a> license.</p> (C) copyright 2009-2013 by the Manatee Project Workgroup.</div>
 	<p class="source" id="sm12">You can obtain the source for this program at https://github.com/over2sd/Manatee/</p>
-% print %var;
-% foreach my $x (@crumbs) {
-%	print $x->[2];
+% foreach (sort keys %var) {
+% 	print "$_: $var{$_}<br/>\n";
 % }
 <br />Done through ccowsugg:55
+	<p>Build #<% $var{build} %></p>
 </body>
 </html>

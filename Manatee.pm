@@ -1,15 +1,62 @@
 package Manatee;
 
 use Cwd;
+use ManateeSQL;
 
 sub suggVars{
-	my ($lang,$build,$scod,$sdesc,$srat,$dbh) = @_;
+	my ($lang,$build,$cowc,$sdesc,$srat,$dbh) = @_;
 	my %var = (
 		'title' => 'Default',
 		'lang' => $lang,
 		'build' => $build
 	);
-
+	if (length($lang) == 0){
+		$var{title} = "Select Language";
+	} else {
+		my $code = cleanCode($cowc);
+		$var{debug} = $code;
+		$var{title} = "Suggest a Category";
+		if (length($code) != 0){
+			$var{cowc} = lc $code;
+		} else {
+			$var{showerr} = 1;
+			$var{showform} = 0;
+#			$var{cowc} = lc $code;
+			$var{cowc} = "----";
+			$var{error} = "Please provide a code to make a suggestion.";
+		}
+		$var{sdesc} = formClean($sdesc);
+		$var{srat} = formClean($srat);
+		$var{custom} = $var{style};
+		if (substr($var{sdesc},0,1) == '[') {
+			$var{showform} = 1;
+		}
+		if (($var{cowc} eq "xxxx") or ($var{cowc} =~ m/y/)) {
+			$var{showform} = 1;
+			$var{showerr} = 1;
+			$var{error} = "You have entered an invalid CCOW code. You may not suggest new names for the top-level category or explanation categories. Please try again.";
+		}
+		if (!$var{showerr}) {
+			$var{stage} = getStage($var{cowc});
+			$var{catname} = &ManateeSQL::glot($var{cowc},$dbh,$lang,$var{stage});
+			if (substr($var{catname},0,1) eq "[") {
+				if (length($var{sdesc}) != 0 && substr($var{sdesc},0,1) ne "[" && length($var{srat}) > 11 && substr ($var{srat},0,1) ne "[") {
+					$var{showform} = 0;
+					$var{pushsugg} = 1; # if it's all good, insert a row into the suggestions table
+				} else { # if bad input, display form
+					print $var{sdesc};
+					$var{showform} = 1;
+				}
+			} else {
+				$var{showerr} = 1;
+				$var{showform} = 0;
+				$var{showsubs} = 1;
+				$var{cowc} = lc $code;
+#				$var{cowc} = "----";
+				$var{error} = "You have chosen an existing category. Please choose another category, or suggest a subcategory, if possible.";
+			}
+		}
+	}
 	return %var;
 }
 

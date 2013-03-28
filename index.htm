@@ -14,10 +14,16 @@ my $dbh = &ManateeSQL::getDB();
 my %config = &Manatee::loadConfig($style);
 my %var = &Manatee::helpVars($lang,$cowc,$dbh);
 if (length($style)){ $var{style} = "style=$style"; }
-my @crumbs = ManateeSQL::glotCrumbs($dbh,$var{code},$var{stage},$lang,$var{style});
-$var{crumbs} = scalar(@crumbs); # how many crumbs?
-$var{crumbdiv} = ($var{crumbs} > 0 and index("xX",substr($var{code},0,1)) eq -1) ? 1 : 0;
-my @subcats = ManateeSQL::glotSubs($dbh,$var{code},$var{stage},$lang);
+my @crumbs;
+my @subcats;
+if (length($var{lang}) != 0) {
+	@crumbs = ManateeSQL::glotCrumbs($dbh,$var{code},$var{stage},$lang,$var{style});
+	$var{crumbs} = scalar(@crumbs); # how many crumbs?
+	$var{crumbdiv} = ($var{crumbs} > 0 and index("xX",substr($var{code},0,1)) eq -1) ? 1 : 0;
+	if ($var{showsubs}) {
+		@subcats = ManateeSQL::glotSubs($dbh,$var{code},$var{stage},$lang);
+	}
+}
 </%perl>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3c.org/1999/xhtml" lang="EN">

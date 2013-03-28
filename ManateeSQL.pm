@@ -30,6 +30,8 @@ sub doQuery {
 		$realq = $dbh->selectall_hashref($statement, { Slice => {} });
 	} elsif ($qtype == 5){
 		$realq = $dbh->selectall_arrayref($statement);
+	} elsif ($qtype == 6){
+		$realq = $dbh->selectrow_array($statement);
 	} else {
 		print "Invalid query type";
 	}
@@ -84,9 +86,9 @@ sub glotCrumbs {
 	}
 	if ($stage eq '0' or (substr($code,0,1) eq 'x')) { # already at top
 		$a = '5';
-		$style = (length($style)) ? substr($style,0,1,'?') : '';
+		$style = (length($style)) ? substr($style,0,1,'?') : '?lang=';
 		$b = "$style";
-		$c = "Change Languages";
+		$c = "Change Languages??";
 		push(@{$crumbs[$ic]},($a,$b,$c));
 	} else {
 		$a = '6';
@@ -123,6 +125,37 @@ sub glotSubs{
 		push(@{$subs[$i]},@subarr);
 	}
 	return @subs;
+}
+
+sub glotSuggs{
+	my @suggs;
+	my ($sql,$code,$lang) = @_;
+#	$code = &Manatee::cleanCode($code);
+	$cmd = qq(SELECT ctext,rationale FROM cats WHERE ccode = '$code' AND lang = '$lang';);
+	$result = doQuery(5,$sql,$cmd);
+	my $i = 0;
+	foreach my $row ($result) {
+		my @subarr = ($row->[0],$row->[1]);
+		push(@{$suggs[$i]},@subarr);
+	}
+	return @suggs;
+}
+
+sub countRecords{
+	my ($dbh,$type,$table,$code,$lang,$ip) = @_;
+	my $cri;
+	if ($type == 0 && length($ip) > 6 && length($code) == 4) {
+		$cri = qq(ccode = '$code' AND lang = '$lang' AND ip = '$ip' AND TIMESTAMPADD(DAY,7,time) < NOW());
+	} else {
+		$cri = "0";
+	}
+	my $cmd = qq(SELECT COUNT(*) as c FROM $table WHERE $cri;);
+	my $count = doQuery(5,$dbh,$cmd);
+	my $out;
+	foreach my $x (@{$count}) {
+		$out = "$x->[0]";
+	}
+	return $out;
 }
 
 1;
