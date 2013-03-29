@@ -130,15 +130,12 @@ sub glotSubs{
 sub glotSuggs{
 	my @suggs;
 	my ($sql,$code,$lang) = @_;
+	$code =~ s/x/o/g;
+	$code =~ s/X/o/g;
 #	$code = &Manatee::cleanCode($code);
 	$cmd = qq(SELECT ctext,rationale FROM cats WHERE ccode = '$code' AND lang = '$lang';);
 	$result = doQuery(5,$sql,$cmd);
-	my $i = 0;
-	foreach my $row ($result) {
-		my @subarr = ($row->[0],$row->[1]);
-		push(@{$suggs[$i]},@subarr);
-	}
-	return @suggs;
+	return @$result;
 }
 
 sub countRecords{
@@ -146,6 +143,8 @@ sub countRecords{
 	my $cri;
 	if ($type == 0 && length($ip) > 6 && length($code) == 4) {
 		$cri = qq(ccode = '$code' AND lang = '$lang' AND ip = '$ip' AND TIMESTAMPADD(DAY,7,time) < NOW());
+	} elsif ($type == 1) {
+		$cri = qq(ccode = '$code' AND lang = '$lang');
 	} else {
 		$cri = "0";
 	}

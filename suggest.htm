@@ -36,26 +36,27 @@ if ($var{showsubs}) {
 $var{suggested} = 0;
 my @suggestions;
 # $var{push} = &ManateeSQL::pushSugg($dbh,$var{ip},$var{cowc},$var{sdesc},$var{srat});
-# @suggestions = &Manatee::getSuggs($dbh,$var{cowc},$var{lang})
+if ($var{push} == 1) {
+	$var{showform} = 0;
+	$var{showerr} = 1;
+	$var{error} = "You have (or someone at your IP has) suggested a description for this category recently. Please try submitting again later, or login to your experts account to make and edit suggestions.";
+}
+@suggestions = &ManateeSQL::glotSuggs($dbh,$var{cowc},$var{lang});
 if (@suggestions) {
-	$var{suggested} = 1;
+	$var{suggested} = scalar(@suggestions);
+}
+if ($var{showsubs}) {
+	$var{suggested} = 0;
 }
 
-print "<br /><br />??!<br />";
+print "<br />-<br />";
 
-# getSuggs
+# pushSugg
 my $code = $var{cowc};
 $code =~ s/x/o/g;
 $code =~ s/X/o/g;
-@suggestions = &ManateeSQL::glotSuggs($dbh,$code,$lang);
-
-$var{suggested} = 1;
-# pushSugg
-#my $code = $var{cowc};
-$code =~ s/x/o/g;
-$code =~ s/X/o/g;
 my $toosoon = &ManateeSQL::countRecords($dbh,0,"cats",$code,$lang,$var{ip});
-if (!$toosoon) {
+if (!$toosoon && $var{showsubs} == 0) {
 	$var{pushcmd} = qq(INSERT INTO cats (ccode,ctext,rationale,ip,lang) VALUES ('$code','$var{sdesc}','$var{srat}','$var{ip}','$lang'););
 
 } else {
@@ -77,7 +78,6 @@ if (!$toosoon) {
 % if(length($config{logo})){
 	<div class="logo"><img src="img/<% $config{logo} %>" alt="<% $config{logodesc} %>" title="<% $config{logodesc} %>" /></div>
 % }
-	<p class="clearit"> </p>
 % if (length($var{lang}) == 0) {
 		<h1 id="sm10"><% $var{title} %></h1>
 		<div class="languages">
@@ -105,10 +105,20 @@ if (!$toosoon) {
 % 	}
 		</ul>
 % }
-		<p class="clearit"> </p>
 	<p>Return to <a href="index.htm">CCOW helper</a></p>
-	<h1 id="sm11">Suggestion for subcategory <% substr($var{cowc},$var{stage}-1,1) %>: <% $var{catname} %></h1>
+	<p class="clearit"> </p>
+	<h1 id="sm11">For subcategory <% substr($var{cowc},$var{stage}-1,1) %>: <% $var{catname} %></h1>
+% if ($var{suggested} != 0) {
+	Current suggestions for <% $var{cowc} %>:
+	<table class="suggs"><tr><th>Suggestion</th><th>Rationale</th></tr>
+% 		for (my $i=0; $i < scalar(@suggestions); $i++) { #<lt>
+%			my @t = $suggestions[$i];
+		<tr><td><% $t[0]->[0] %></td><td><% $t[0]->[1] %></td></tr>
+% 	}
+	</table>
+% }
 % if ($var{showform}) {
+	Your suggestion:
 	<form name="suggest" method="post" action="suggest.htm">
 		Code: <input type="text" name="cowc" size="4" value="<% $var{cowc} %>" /><br />
 		Description: <input type="text" name="sdesc" size="75%" value="<% $var{sdesc} %>" /><br />
@@ -117,22 +127,12 @@ if (!$toosoon) {
 		<input type="hidden" name="style" value="<% $var{style} %>" />
 		<input type="submit"  value="Suggest" />
 	</form>
+% } elsif ($var{showerr} == 1) {
+	<br />
 % } else {
 	<p>You entered: <% $var{cowc} %>: "<% $var{sdesc} %>" - "<% $var{srat} %>"</p>
 % }
-% if ($var{suggested}) {
-	Current suggestions for <% $var{cowc} %>:
-	<table><tr><th>Suggestion</th><th>Rationale</th></tr>
-% 	foreach my $s (@suggestions) {
-%		foreach my $t ($s) {
-			<% $t->[0] %>
-%		}
-		<tr><td><% $s->[0] %></td><td><% $s->[1] %></td></tr>
-% 	}
-	</table>
-% }
 
-Nothing to see, yet.
 % if ($var{showerr}) {
 	<p class="errtext"><% $var{error} %></p>
 % }

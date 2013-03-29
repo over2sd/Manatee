@@ -39,12 +39,18 @@ sub suggVars{
 		if (!$var{showerr}) {
 			$var{stage} = getStage($var{cowc});
 			$var{catname} = &ManateeSQL::glot($var{cowc},$dbh,$lang,$var{stage});
-			if (substr($var{catname},0,1) eq "[") {
+			my $parent = substr("$var{cowc}xxxx",0,4);
+			substr($parent,$var{stage}-1,1) = 'x';
+			$var{parname} = &ManateeSQL::glot($parent,$dbh,$lang,$var{stage}-1);
+			if (substr($var{parname},0,1) eq "[") {
+				$var{showerr} = 1;
+				$var{showform} = 0;
+				$var{error} = "You cannot suggest a subcategory to an undefined category. Please choose another category.";
+			} elsif (substr($var{catname},0,1) eq "[") {
 				if (length($var{sdesc}) != 0 && substr($var{sdesc},0,1) ne "[" && length($var{srat}) > 11 && substr ($var{srat},0,1) ne "[") {
 					$var{showform} = 0;
 					$var{pushsugg} = 1; # if it's all good, insert a row into the suggestions table
 				} else { # if bad input, display form
-					print $var{sdesc};
 					$var{showform} = 1;
 				}
 			} else {
