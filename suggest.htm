@@ -13,10 +13,9 @@ use lib '/var/www/ccow-m';
 use Manatee;
 use ManateeSQL;
 
-my $build = '003';
 my %config = &Manatee::loadConfig($style);
 my $dbh = &ManateeSQL::getDB();
-my %var = &Manatee::suggVars($lang,$build,$cowc,$sdesc,$srat,$dbh);
+my %var = &Manatee::suggVars($lang,$cowc,$sdesc,$srat,$dbh);
 
 
 if (length($config{site}) == 0) {
@@ -24,44 +23,45 @@ if (length($config{site}) == 0) {
 }
 if (length($style)){ $var{style} = "style=$style"; }
 
-#suggest.htm
 $var{ip} = $r->connection->remote_ip;
-my @crumbs = ManateeSQL::glotCrumbs($dbh,$var{cowc},$var{stage},$lang,$var{style});
-$var{crumbs} = scalar(@crumbs); # how many crumbs?
-$var{crumbdiv} = ($var{crumbs} > 0 and index("xX",substr($var{cowc},0,1)) eq -1) ? 1 : 0;
+my @crumbs;
 my @subcats;
+if ($var{lang}) {
+	@crumbs = ManateeSQL::glotCrumbs($dbh,$var{cowc},$var{stage},$lang,$var{style});
+	$var{crumbs} = scalar(@crumbs); # how many crumbs?
+	$var{crumbdiv} = ($var{crumbs} > 0 and index("xX",substr($var{cowc},0,1)) eq -1) ? 1 : 0;
+}
 if ($var{showsubs}) {
 	@subcats = ManateeSQL::glotSubs($dbh,$var{cowc},$var{stage},$lang);
+} elsif (!$var{showerr}) {
+	$var{push} = &ManateeSQL::pushSugg($dbh,$var{ip},$var{cowc},$var{sdesc},$var{srat},$var{lang});
 }
-$var{suggested} = 0;
-my @suggestions;
-# $var{push} = &ManateeSQL::pushSugg($dbh,$var{ip},$var{cowc},$var{sdesc},$var{srat});
 if ($var{push} == 1) {
 	$var{showform} = 0;
 	$var{showerr} = 1;
-	$var{error} = "You have (or someone at your IP has) suggested a description for this category recently. Please try submitting again later, or login to your experts account to make and edit suggestions.";
+	$var{error} = "You have (or someone at your IP has) suggested a description for this category recently. Please try again later, or login to your expert account to make and edit suggestions.";
+} elsif ($var{push} == 0) {
+	$var{showform} = 0;
+} elsif ($var{push} == -1 or $var{push} > 2) {
+	$var{showform} = 1;
+	$var{showerr} = 1;
+	$var{error} = "An error occurred while trying to execute your query.";
+} else {
+	$var{showform} = 1;
+	$var{showerr} = 1;
+	$var{error} = "Please enter a valid suggestion and a thorough reasoning for your suggestion's appropriateness to this category.";
 }
-@suggestions = &ManateeSQL::glotSuggs($dbh,$var{cowc},$var{lang});
+
+$var{suggested} = 0;
+my @suggestions;
+if ($var{lang}) {
+	@suggestions = &ManateeSQL::glotSuggs($dbh,$var{cowc},$var{lang});
+}
 if (@suggestions) {
 	$var{suggested} = scalar(@suggestions);
 }
 if ($var{showsubs}) {
 	$var{suggested} = 0;
-}
-
-print "<br />-<br />";
-
-# pushSugg
-my $code = $var{cowc};
-$code =~ s/x/o/g;
-$code =~ s/X/o/g;
-my $toosoon = &ManateeSQL::countRecords($dbh,0,"cats",$code,$lang,$var{ip});
-if (!$toosoon && $var{showsubs} == 0) {
-	$var{pushcmd} = qq(INSERT INTO cats (ccode,ctext,rationale,ip,lang) VALUES ('$code','$var{sdesc}','$var{srat}','$var{ip}','$lang'););
-
-} else {
-	$var{pushcmd} = "TOOSOON!";
-#	return 1; # too soon
 }
 </%perl>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -78,21 +78,6 @@ if (!$toosoon && $var{showsubs} == 0) {
 % if(length($config{logo})){
 	<div class="logo"><img src="img/<% $config{logo} %>" alt="<% $config{logodesc} %>" title="<% $config{logodesc} %>" /></div>
 % }
-% if (length($var{lang}) == 0) {
-		<h1 id="sm10"><% $var{title} %></h1>
-		<div class="languages">
-			<p class="lingua"><a href="?lang=en
-% if(length($var{style})){
-&<% $var{style} %>
-% }
-">Language: English</a></p>
-			<p class="lingua"><a href="?lang=es
-% if(length($var{style})){
-&<% $var{style} %>
-% }
-">Idioma: Español</a></p>
-		</div>
-% } else {
 
 % if ($var{crumbs}) {
 		<ul class="loaf" id="breadtrail">
@@ -105,9 +90,17 @@ if (!$toosoon && $var{showsubs} == 0) {
 % 	}
 		</ul>
 % }
-	<p>Return to <a href="index.htm">CCOW helper</a></p>
 	<p class="clearit"> </p>
+<& ccowmenu.comp, 'uri'=>$var{uri} &>
+% if ($var{lang}) {
 	<h1 id="sm11">For subcategory <% substr($var{cowc},$var{stage}-1,1) %>: <% $var{catname} %></h1>
+% 	if (-e "$config{localpath}/$var{catinf}") {
+Parent's description: <& $var{catinf} &>
+% 	} else {
+Parent description is not available.
+<& cats/dhandler &>
+<br />
+% 	}
 % if ($var{suggested} != 0) {
 	Current suggestions for <% $var{cowc} %>:
 	<table class="suggs"><tr><th>Suggestion</th><th>Rationale</th></tr>
@@ -116,6 +109,7 @@ if (!$toosoon && $var{showsubs} == 0) {
 		<tr><td><% $t[0]->[0] %></td><td><% $t[0]->[1] %></td></tr>
 % 	}
 	</table>
+<br />
 % }
 % if ($var{showform}) {
 	Your suggestion:
@@ -130,7 +124,7 @@ if (!$toosoon && $var{showsubs} == 0) {
 % } elsif ($var{showerr} == 1) {
 	<br />
 % } else {
-	<p>You entered: <% $var{cowc} %>: "<% $var{sdesc} %>" - "<% $var{srat} %>"</p>
+	<p>Your suggestion has been entered for category <% $var{cowc} %>: "<% $var{sdesc} %>" because "<% $var{srat} %>"</p>
 % }
 
 % if ($var{showerr}) {
@@ -149,14 +143,25 @@ if (!$toosoon && $var{showsubs} == 0) {
 			<p class="clearit"> </p>
 % }
 
+% if (length($var{lang}) == 0) {
+		<h1 id="sm10"><% $var{title} %></h1>
+		<div class="languages">
+			<p class="lingua"><a href="?lang=en
+% if(length($var{style})){
+&<% $var{style} %>
+% }
+">Language: English</a></p>
+			<p class="lingua"><a href="?lang=es
+% if(length($var{style})){
+&<% $var{style} %>
+% }
+">Idioma: Español</a></p>
+		</div>
+% }
 
-	<div class="cc" id="sm11">This helper application is released under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike</a> license.
+
+	<div class="cc" id="sm11">This suggestion application is released under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike</a> license.
 	<p>The contents of the translation and description files are released under a <a href="http://creativecommons.org/licenses/by-nd/3.0/">CC Attribution-No Derivative Works</a> license.</p> (C) copyright 2009-2013 by the Manatee Project Workgroup.</div>
 	<p class="source" id="sm12">You can obtain the source for this program at https://github.com/over2sd/Manatee/</p>
-% foreach (sort keys %var) {
-% 	print "$_: $var{$_}<br/>\n";
-% }
-<br />Done through ccowsugg:55
-	<p>Build #<% $var{build} %></p>
 </body>
 </html>

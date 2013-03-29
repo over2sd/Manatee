@@ -26,6 +26,13 @@ sub doQuery {
 		$realq = $dbh->selectrow_arrayref($statement, { Slice => {} });
 	} elsif ($qtype == 1){
 		$realq = $dbh->selectall_arrayref($statement, { Slice => {} });
+	} elsif ($qtype == 2) {
+		$realq = $dbh->do($statement) or $realq = $dbh->errstr;
+		if($realq =~ m/^[0-9]+$/) {
+			return $realq; 
+		} else {
+			return $dbh->errstr;
+		}
 	} elsif ($qtype == 3){
 		$realq = $dbh->selectall_hashref($statement, { Slice => {} });
 	} elsif ($qtype == 5){
@@ -142,7 +149,7 @@ sub countRecords{
 	my ($dbh,$type,$table,$code,$lang,$ip) = @_;
 	my $cri;
 	if ($type == 0 && length($ip) > 6 && length($code) == 4) {
-		$cri = qq(ccode = '$code' AND lang = '$lang' AND ip = '$ip' AND TIMESTAMPADD(DAY,7,time) < NOW());
+		$cri = qq(ccode = '$code' AND lang = '$lang' AND ip = '$ip' AND TIMESTAMPADD(DAY,7,time) > NOW());
 	} elsif ($type == 1) {
 		$cri = qq(ccode = '$code' AND lang = '$lang');
 	} else {
@@ -155,6 +162,37 @@ sub countRecords{
 		$out = "$x->[0]";
 	}
 	return $out;
+}
+
+sub pushSugg{
+	my ($dbh,$ip,$code,$desc,$rat,$lang) = @_;
+	$code =~ s/x/o/g;
+	$code =~ s/X/o/g;
+	my $toosoon = countRecords($dbh,0,"cats",$code,$lang,$ip);
+	if ($toosoon) {
+		return 1; # too soon
+	} elsif ($desc =~ m/;/) { return 2;
+	} elsif ($desc =~ m/\[/) { return 2;
+	} elsif ($desc =~ m/\]/) { return 2;
+	} elsif ($rat =~ m/;/) { return 2;
+	} elsif ($rat =~ m/\[/) { return 2;
+	} elsif ($rat =~ m/\]/) { return 2;
+	} elsif (length($rat) < 20) { return 2;
+	} elsif (length($desc) < 5) { return 2;
+	} else {
+		my $cmd = qq(INSERT INTO cats (ccode,ctext,rationale,ip,lang,time) VALUES ('$code','$desc','$rat','$ip','$lang',NOW()););
+		my $success = doQuery(2,$dbh,$cmd);
+		if($success == 1) { #yay!
+#			print "Query successful";
+			return 0;
+		} elsif($success =~ m/^[0-9]+$/) { # wrong number of rows?
+#			print "Row count error: $success"
+			return 3;
+		} else { # not an expected numeric return value
+#			print "Database Error: $success. Please contact the DBA!";
+			return -1;
+		}
+	}
 }
 
 1;

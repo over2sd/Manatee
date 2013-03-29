@@ -46,3 +46,5 @@ table.progress tr td p { background-color: #fff; color: #fff; padding: 2px; marg
 .errtext { color: #600; background-color: #ffc; text-align: center; }
 .suggs { width: 98%; left: 1%; padding: 1%; border: 2px inset #decade; border-radius: 30px; background-color: #efface; }
 .suggs tr td { border: 2px outset #decade; border-radius: 15px; padding: 10px; background-color: #fafafa; margin: 1em; }
+.menubar { padding: 1%; width: 100%; left: -5px; background-color: #bee; }
+.menubar p { display: inline; border: 1px outset #fee; margin: 2px; padding: 2px; }

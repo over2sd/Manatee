@@ -1,3 +1,7 @@
+2013-03-29 (and earlier):
+- Suggestion form code added.
+- Suggestion application integrated with helper.
+
 2013-03-23 (and earlier):
 - Added an admin script (so far, only dumps the database into a backup flat file).
 - Started work on the suggestion form.

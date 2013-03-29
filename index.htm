@@ -22,8 +22,15 @@ if (length($var{lang}) != 0) {
 	$var{crumbdiv} = ($var{crumbs} > 0 and index("xX",substr($var{code},0,1)) eq -1) ? 1 : 0;
 	if ($var{showsubs}) {
 		@subcats = ManateeSQL::glotSubs($dbh,$var{code},$var{stage},$lang);
+		for (my $i = 0; $i < scalar(@subcats); $i++) {
+			if (substr($subcats[$i][2],0,1) eq '[') {
+				$var{suggsubs} = 1;
+				$i = 255;
+			}
+		}
 	}
 }
+
 </%perl>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3c.org/1999/xhtml" lang="EN">
@@ -52,6 +59,7 @@ if (length($var{lang}) != 0) {
 		</ul>
 % }
 		<p class="clearit"> </p>
+<& ccowmenu.comp, 'uri'=>$var{uri} &>
 % if (length($var{code})) {
 % 	if (length($var{expl})) {
 		<h1 id="sm17"><% $var{catname} %></h1>
@@ -66,10 +74,14 @@ if (length($var{lang}) != 0) {
 <& $var{catinf} &>
 % 	} else {
 <& cats/dhandler &>
-% 	}
 % 	print $var{noinf};
-% 	if (length($var{suggsubs})) {
-		You can help fill out this category. Visit <a href="{{ var['sugurl'] }}?lang={{ var['lang'] }}&cowc={{ var['code'] }}{% if var['style'] %}&{{ var['style'] }}{% endif %}"><% $var{code} %> Divisions</a> to help.
+% 	}
+% 	if ($var{suggsubs} && length($config{sugurl})) {
+		You can help fill out this category. Visit <a href="<% $config{sugurl} %>?lang=<% $var{lang} %>&cowc=<% $var{code} %>
+% if (length($var{style})) {
+&<% $var{style} %>
+% }
+"><% $var{code} %> Divisions</a> to help.
 % 	}
 % 	if (length($var{cattrim}) and not $var{y}) {
 		<p class="note" id="sm01">If you are searching for <% $var{catname} %>, add <strong>cowc:#<% $var{cattrim} %></strong> to your search criteria.</p>

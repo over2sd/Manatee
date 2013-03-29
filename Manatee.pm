@@ -4,11 +4,12 @@ use Cwd;
 use ManateeSQL;
 
 sub suggVars{
-	my ($lang,$build,$cowc,$sdesc,$srat,$dbh) = @_;
+	my ($lang,$cowc,$sdesc,$srat,$dbh) = @_;
 	my %var = (
 		'title' => 'Default',
 		'lang' => $lang,
-		'build' => $build
+		'uri' => 'suggest.htm',
+		'catinf' => 'bogus'
 	);
 	if (length($lang) == 0){
 		$var{title} = "Select Language";
@@ -34,7 +35,8 @@ sub suggVars{
 		if (($var{cowc} eq "xxxx") or ($var{cowc} =~ m/y/)) {
 			$var{showform} = 1;
 			$var{showerr} = 1;
-			$var{error} = "You have entered an invalid CCOW code. You may not suggest new names for the top-level category or explanation categories. Please try again.";
+			$var{showsubs} = 1;
+			$var{error} = "Please choose a category to begin. You may not make suggestions for top-level or existing categories.";
 		}
 		if (!$var{showerr}) {
 			$var{stage} = getStage($var{cowc});
@@ -42,6 +44,7 @@ sub suggVars{
 			my $parent = substr("$var{cowc}xxxx",0,4);
 			substr($parent,$var{stage}-1,1) = 'x';
 			$var{parname} = &ManateeSQL::glot($parent,$dbh,$lang,$var{stage}-1);
+			$var{catinf} = "cats/$lang/$parent";
 			if (substr($var{parname},0,1) eq "[") {
 				$var{showerr} = 1;
 				$var{showform} = 0;
@@ -70,7 +73,9 @@ sub helpVars{
 	my ($lang,$cowc,$dbh) = @_;
 	my %var = (
 		'title' => 'Default',
-		'lang' => $lang
+		'lang' => $lang,
+		'uri' => 'index.htm',
+		'catinf' => 'bogus'
 	);
 	if (length($lang) == 0){
 		$var{title} = "Select Language";
@@ -96,6 +101,9 @@ sub helpVars{
 			$var{muldesc} = &ManateeSQL::glot($var{catmul},$dbh,$lang,4);
 		}
 		$var{catname} = &ManateeSQL::glot($var{code},$dbh,$lang,$var{stage});
+		if (substr($var{catname},0,1) eq '[') {
+			$var{suggsubs} = 1;
+		}
 		$var{border} = substr($var{catmul},0,3);
 		if ($var{y}) { # explanation key
 			$var{dosnip} = 0;
@@ -132,7 +140,8 @@ sub loadConfig{
 		'logo' => 'manateelogo.png',
 		'logodesc' => 'Logo: drawing of a sea cow.',
 		'custom' => chooseStyle($style),
-		'localpath' => '/var/www/ccow-m'
+		'localpath' => '/var/www/ccow-m',
+		'sugurl' => 'suggest.htm'
 	);
 	return %config;
 }
