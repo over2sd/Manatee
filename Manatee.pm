@@ -9,7 +9,8 @@ sub suggVars{
 		'title' => 'Default',
 		'lang' => $lang,
 		'uri' => 'suggest.htm',
-		'catinf' => 'bogus'
+		'catinf' => 'bogus',
+		'showform' => 1
 	);
 	if (length($lang) == 0){
 		$var{title} = "Select Language";
@@ -21,7 +22,6 @@ sub suggVars{
 			$var{cowc} = lc $code;
 		} else {
 			$var{showerr} = 1;
-			$var{showform} = 0;
 #			$var{cowc} = lc $code;
 			$var{cowc} = "----";
 			$var{error} = "Please provide a code to make a suggestion.";
@@ -33,7 +33,6 @@ sub suggVars{
 			$var{showform} = 1;
 		}
 		if (($var{cowc} eq "xxxx") or ($var{cowc} =~ m/y/)) {
-			$var{showform} = 1;
 			$var{showerr} = 1;
 			$var{showsubs} = 1;
 			$var{error} = "Please choose a category to begin. You may not make suggestions for top-level or existing categories.";
@@ -50,7 +49,7 @@ sub suggVars{
 				$var{showform} = 0;
 				$var{error} = "You cannot suggest a subcategory to an undefined category. Please choose another category.";
 			} elsif (substr($var{catname},0,1) eq "[") {
-				if (length($var{sdesc}) != 0 && substr($var{sdesc},0,1) ne "[" && length($var{srat}) > 11 && substr ($var{srat},0,1) ne "[") {
+				if (length($var{sdesc}) != 0 && substr($var{sdesc},0,1) ne "[" && length($var{srat}) > 19 && substr ($var{srat},0,1) ne "[") {
 					$var{showform} = 0;
 					$var{pushsugg} = 1; # if it's all good, insert a row into the suggestions table
 				} else { # if bad input, display form

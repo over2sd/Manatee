@@ -1,17 +1,18 @@
 <!-- Menubar component -->
 <%args>
 $uri
+$query => ''
 </%args>
 <div class="menubar">
 % if ($uri eq "index.htm") {
 <p>Helper</p>
 % } else {
-<p><a href="index.htm">Helper</a></p>
+<p><a href="index.htm<% $query %>">Helper</a></p>
 % }
 % if ($uri eq "suggest.htm") {
 <p>Suggestions</p>
 % } else {
-<p><a href="suggest.htm">Suggestions</a></p>
+<p><a href="suggest.htm<% $query %>">Suggestions</a></p>
 % }
 
 </div>

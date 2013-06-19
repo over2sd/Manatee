@@ -6,7 +6,7 @@ or an HTML page listing some of the unassigned categories.
 """
 from __future__ import print_function
 
-BUILD = "021"
+BUILD = "024"
 
 import sys
 from PIL import (Image, ImageDraw)
@@ -79,7 +79,7 @@ def dictpop(lang = "en"): # Should always be "en"
     exit(4)
 # Oh, and do error checking along the way. (TODO)
   sqlconn.close()
-  return dict
+  return (dict, config)
 
 # def isReserved(string): # Check if the value is "[Reserved]"
 
@@ -259,18 +259,21 @@ def main(): # The main event
     print("Progress..", end='')
     here = os.path.dirname(os.path.abspath(__file__))
     env = Environment(loader=FileSystemLoader(here))
-    template = env.get_template('progress.jtl')
+    template = env.get_template('templates/progress.jtl')
     var = {}
     var['build'] = BUILD
  # push the SQL database into a dict
-    codes = dictpop()
+    (codes, config) = dictpop()
  # cycle through the dict, writing pixels to the new image
     reserved = buildPNG(codes)
     var['res'] = reserved
     x = 69904.00 # 16^4 + 16^3 + 16^2 + 16
+    var['creq'] = round(x,0);
 #    print(len(codes))
     x = round(len(codes) / x,7)
+    var['cdone'] = len(codes);
     var['pcdone'] = x * 100 # To make the percentage display a percentage, not a decimal
+    var['perwid'] = round(var['pcdone'],1);
     var['ts'] = "{0:%H:%M:%Sh (UTC) on %b %d, %Y}".format(datetime.utcnow())
  # save the new image to a timestamp-containing filename
     ts = timeStamper()
@@ -288,7 +291,7 @@ def main(): # The main event
       shutil.copy("progress" + ts + ".png",old)
  # write a new progress.htm
       with codecs.open("progress.htm",'wU',"UTF-8") as f:
-        f.write(template.render({"var": var}).encode("utf-8"))
+        f.write(template.render({"var": var, "config": config}).encode("utf-8"))
         f.close()
     except Exception as e:
       print("An error occurred attempting to process files: %s" % e)
@@ -298,18 +301,18 @@ def main(): # The main event
     print("Missing..",end='')
     here = os.path.dirname(os.path.abspath(__file__))
     env = Environment(loader=FileSystemLoader(here))
-    template = env.get_template('missing.jtl')
+    template = env.get_template('templates/missing.jtl')
     var = {}
     var['build'] = BUILD
  # push the SQL database into a dict
-    codes = dictpop()
+    (codes, config) = dictpop()
     var['codes'] = listMissing(codes)
 #    print var['codes']
  # loop through codes, writing missing cats to a dict for templating
  # finally, open the file, call the templater, and try to write the file.
     try:
       with codecs.open("missing.htm",'wU',"UTF-8") as f:
-        f.write(template.render({"var": var}).encode("utf-8"))
+        f.write(template.render({"var": var, "config": config}).encode("utf-8"))
         f.close()
     except Exception as e:
       print("An error occurred attempting to open file for writing: %s" % e)

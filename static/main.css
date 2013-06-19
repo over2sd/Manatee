@@ -2,7 +2,7 @@ Content-Type: text/css
 
 
 /* CSS */
-
+body { background-color: #f00; }
 p { margin: 0px; }
 h1 { clear: left; }
 .loaf { position: absolute; left: 7px; top: 2px; color: #300; list-style-type: circle; border: 2px solid #906; border-radius: 15px; padding: 7px; background-color: #cff; max-width: 80%; }
@@ -48,3 +48,6 @@ table.progress tr td p { background-color: #fff; color: #fff; padding: 2px; marg
 .suggs tr td { border: 2px outset #decade; border-radius: 15px; padding: 10px; background-color: #fafafa; margin: 1em; }
 .menubar { padding: 1%; width: 100%; left: -5px; background-color: #bee; }
 .menubar p { display: inline; border: 1px outset #fee; margin: 2px; padding: 2px; }
+#host { display: none; }
+#cowspons { display: none; }
+

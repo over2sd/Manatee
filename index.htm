@@ -31,6 +31,9 @@ if (length($var{lang}) != 0) {
 	}
 }
 
+my $qs = "";
+if (length($var{lang})) { $qs = "?lang=".$var{lang}."&cowc=".$cowc; }
+if (length($var{style})) { $qs = $qs."&".$var{style}; }
 </%perl>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3c.org/1999/xhtml" lang="EN">
@@ -59,7 +62,7 @@ if (length($var{lang}) != 0) {
 		</ul>
 % }
 		<p class="clearit"> </p>
-<& ccowmenu.comp, 'uri'=>$var{uri} &>
+<& ccowmenu.comp, 'uri'=>$var{uri}, 'query'=>$qs &>
 % if (length($var{code})) {
 % 	if (length($var{expl})) {
 		<h1 id="sm17"><% $var{catname} %></h1>
@@ -140,5 +143,6 @@ if (length($var{lang}) != 0) {
 	<div class="cc" id="sm11">This helper application is released under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike</a> license.
 	<p>The contents of the translation and description files are released under a <a href="http://creativecommons.org/licenses/by-nd/3.0/">CC Attribution-No Derivative Works</a> license.</p> (C) copyright 2009-2013 by the Manatee Project Workgroup.</div>
 	<p class="source" id="sm12">You can obtain the source for this program at https://github.com/over2sd/Manatee/</p>
+<& footer.comp &>
 </body>
 </html>

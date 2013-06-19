@@ -1,3 +1,7 @@
+2013-06-18:
+- Fixed problems with ccowprogress.py regarding static files and templates not using config variables, and added progress bar to progress page.
+- 
+
 2013-03-29 (and earlier):
 - Suggestion form code added.
 - Suggestion application integrated with helper.

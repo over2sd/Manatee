@@ -16,12 +16,12 @@
 		<input type="hidden" name="lang" value="{{ var['lang'] }}" />
 		<input type="hidden" name="style" value="{{ var['style'] }}" />
 		<input type="submit"  value="Suggest" />
-	</form>{% else %}<p>You entered: {{ var['scod'] }}: {{ var['sdesc'] }} - {{ var['srat'] }}</p>{% endif %}{% if var['suggested'] %}
+	</form>{% else %}<p>You entered: {{ var['scod'] }}: "{{ var['sdesc'] }}" - "{{ var['srat'] }}"</p>{% endif %}{% if var['suggested'] %}
 	Current suggestions for {{ var['scod'] }}:{% for d in var['suggested'] %}
 		<p>{{ d|e }}</p>
 {% endfor %}{% endif %}
 
-Nothing to see, yet. {{ config['host'] }}
+Nothing to see, yet.
 {% if var['showerr'] %}	<p class="errtext">{{ var['error'] }}</p>
 {% endif %}  <p>Build #{{ var['build'] }}</p>
 </body>

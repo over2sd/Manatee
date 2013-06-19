@@ -1,0 +1,9 @@
+<%perl>
+my %config = (
+	"host" => "localhost",
+	"base" => "ccow",
+	"site" => "Manatee",
+	"logo" => "manateelogo.png",
+	"logodesc" => "Logo: drawing of a sea cow." );
+return %config;
+</%perl>

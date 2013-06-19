@@ -31,7 +31,8 @@ def suggest():
     var['showerr'] = True
     var['showform'] = False
     var['scod'] = "----"
-    var['error'] = "You must provide a code. Please try again."
+    var['error'] = "Please provide a code to make a suggestion."
+  # check input validity
   desc = request.values.get("sdesc","[Suggestion]")
   var['sdesc'] = formClean(desc)
   rationale = request.values.get("srat","[Rationale]")
@@ -45,7 +46,6 @@ def suggest():
   var['title'] = "Suggest a Category"
   # if no input, display form
   if desc[0] == '[': var['showform'] = True
-  # check input validity
   # ccode
   if var['scod'] == "xxxx" or str(var['scod']).find('y') != -1:
     var['showform'] = False

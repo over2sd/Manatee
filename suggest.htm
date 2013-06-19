@@ -17,7 +17,6 @@ my %config = &Manatee::loadConfig($style);
 my $dbh = &ManateeSQL::getDB();
 my %var = &Manatee::suggVars($lang,$cowc,$sdesc,$srat,$dbh);
 
-
 if (length($config{site}) == 0) {
 	$config{site} = "Manatee";
 }
@@ -42,10 +41,27 @@ if ($var{push} == 1) {
 	$var{error} = "You have (or someone at your IP has) suggested a description for this category recently. Please try again later, or login to your expert account to make and edit suggestions.";
 } elsif ($var{push} == 0) {
 	$var{showform} = 0;
-} elsif ($var{push} == -1 or $var{push} > 2) {
+} elsif ($var{push} == -1 or $var{push} > 3) {
 	$var{showform} = 1;
 	$var{showerr} = 1;
 	$var{error} = "An error occurred while trying to execute your query.";
+} elsif ($var{push} == 2 and length($var{srat}) < 20) {
+	my $rl = length($var{srat});
+	$var{showerr} = 1;
+	my $it = "just barely ";
+	if ($rl < 18) {
+		$it = "a little ";
+		if ($rl < 15) {
+			$it = "";
+			if ($rl < 12) {
+				$it = "much ";
+				if ($rl < 9) {
+					$it = "waaaaay ";
+				}
+			}
+		}
+	}
+	$var{error} = "Your rationale is ".$it."too short. Please be more thorough.";
 } else {
 	$var{showform} = 1;
 	$var{showerr} = 1;
@@ -63,6 +79,9 @@ if (@suggestions) {
 if ($var{showsubs}) {
 	$var{suggested} = 0;
 }
+my $qs = "";
+if (length($var{lang})) { $qs = "?lang=".$var{lang}."&cowc=".$cowc; }
+if (length($var{style})) { $qs = $qs."&".$var{style}; }
 </%perl>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3c.org/1999/xhtml" lang="EN">
@@ -72,7 +91,6 @@ if ($var{showsubs}) {
 % if(length($config{custom})){
 	<link rel="stylesheet" type="text/css" href="static/<% $config{custom} %>.css" />
 %}
-
 </head>
 <body>
 % if(length($config{logo})){
@@ -91,11 +109,13 @@ if ($var{showsubs}) {
 		</ul>
 % }
 	<p class="clearit"> </p>
-<& ccowmenu.comp, 'uri'=>$var{uri} &>
+<& ccowmenu.comp, 'uri'=>$var{uri}, 'query'=>$qs &>
 % if ($var{lang}) {
 	<h1 id="sm11">For subcategory <% substr($var{cowc},$var{stage}-1,1) %>: <% $var{catname} %></h1>
 % 	if (-e "$config{localpath}/$var{catinf}") {
-Parent's description: <& $var{catinf} &>
+Parent's description: <% $var{parname} %> <& $var{catinf} &>
+%	} elsif ($var{parname}) {
+Parent (<% $var{parname} %>) has no long description.<br />
 % 	} else {
 Parent description is not available.
 <& cats/dhandler &>
@@ -119,7 +139,7 @@ Parent description is not available.
 		Rationale: <input type="text" name="srat" size="75%" value="<% $var{srat} %>" /><br />
 		<input type="hidden" name="lang" value="<% $var{lang} %>" />
 		<input type="hidden" name="style" value="<% $var{style} %>" />
-		<input type="submit"  value="Suggest" />
+		<input type="submit"  value="Send Suggestion" />
 	</form>
 % } elsif ($var{showerr} == 1) {
 	<br />
@@ -163,5 +183,6 @@ Parent description is not available.
 	<div class="cc" id="sm11">This suggestion application is released under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike</a> license.
 	<p>The contents of the translation and description files are released under a <a href="http://creativecommons.org/licenses/by-nd/3.0/">CC Attribution-No Derivative Works</a> license.</p> (C) copyright 2009-2013 by the Manatee Project Workgroup.</div>
 	<p class="source" id="sm12">You can obtain the source for this program at https://github.com/over2sd/Manatee/</p>
+<& footer.comp &>
 </body>
 </html>

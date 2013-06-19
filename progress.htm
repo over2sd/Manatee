@@ -6,14 +6,14 @@
 	<link rel="stylesheet" type="text/css" href="static/main.css" />
 </head>
 <body>
-{% if config['logo'] %}<div class="logo"><img src="img/{{ config['logo'] }}" alt="{{ config['logodesc'] }}" title="{{ config['logodesc'] }}" /></div>{% endif %}
+<div class="logo"><img src="img/manateelogo.png" alt="Logo: drawing of a sea cow." title="Logo: drawing of a sea cow." /></div>
 	<p>Return to <a href="index.htm">CCOW helper</a></p>
-	<p>The following is the progress of the English tables when the last progress report was run at {{ var['ts'] }}:</p>
+	<p>The following is the progress of the English tables when the last progress report was run at 17:32:27h (UTC) on Jun 18, 2013:</p>
 	<div class="oldstat">Previous Progress<img src="progress-old.png" alt="Graphic showing progress as a collection of pixels representing assigned and unassigned sections." /></div>
 	<div class="newstat">Latest Progress<img src="progress.png" alt="Graphic showing progress as a collection of pixels representing assigned and unassigned sections." /></div>
-	<div><div class="lf" style="display: inline-block; width: 60%; background-color: #333;"><div class="lf c" style="width: {{ var['perwid'] }}%; background-color: #0c0; color: #606;">&nbsp;{{ "%.2f" | format(var['pcdone']) }}%&nbsp;</div></div> {{ var['cdone'] }}/{{ "%i" | format(var['creq']) }} est. of required categories done.</div>
-	<p class=" clearit">Progress: {{ var['pcdone'] }}% with {{ var['res'] }} reserved categories.</p>
+	<div><div class="lf" style="display: inline-block; width: 60%; background-color: #333;"><div class="lf c" style="width: 7.6%; background-color: #0c0; color: #606;">&nbsp;7.60%&nbsp;</div></div> 5312/69904 est. of required categories done.</div>
+	<p class=" clearit">Progress: 7.59899% with 0 reserved categories.</p>
 	<p>See <a href="missing.htm">missing categories</a></p>
-  <p>Build #{{ var['build'] }}</p>
+  <p>Build #022</p>
 </body>
 </html>
